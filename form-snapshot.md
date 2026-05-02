@@ -1,0 +1,53 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - link "Вернуться" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - text: Вернуться
+      - generic [ref=e8]: PROстранство
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e12]: Бесплатный разбор
+        - heading "Разберём ваш кабинет и найдём точки роста" [level=1] [ref=e13]
+        - paragraph [ref=e14]: Оставьте заявку — проведём анализ кабинета, покажем что мешает росту и дадим конкретный план действий
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: +200%
+            - generic [ref=e18]: средний рост выручки
+          - generic [ref=e19]:
+            - generic [ref=e20]: 50+
+            - generic [ref=e21]: кейсов на WB и Ozon
+          - generic [ref=e22]:
+            - generic [ref=e23]: 30 мин
+            - generic [ref=e24]: бесплатный разбор
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e27]: ◈
+            - generic [ref=e28]: Анализ воронки продаж и рекламных кампаний
+          - generic [ref=e29]:
+            - generic [ref=e30]: ◈
+            - generic [ref=e31]: Аудит карточек товаров и контента
+          - generic [ref=e32]:
+            - generic [ref=e33]: ◈
+            - generic [ref=e34]: Оценка финансовых показателей и юнит-экономики
+          - generic [ref=e35]:
+            - generic [ref=e36]: ◈
+            - generic [ref=e37]: Конкретные рекомендации на следующие 30 дней
+      - generic [ref=e38]:
+        - generic [ref=e41]:
+          - paragraph [ref=e42]: Оставить заявку
+          - paragraph [ref=e43]: Ответим в течение 15 минут и запишем на разбор
+          - generic [ref=e44]:
+            - generic [ref=e45]
+            - button "Получить бесплатный разбор" [ref=e69] [cursor=pointer]
+            - paragraph [ref=e70]: Нажимая кнопку, вы соглашаетесь на обработку персональных данных
+        - generic: ◈
+        - generic: ◈
+        - generic: ◈
+        - generic [ref=e71]:
+          - img [ref=e72]
+          - text: Ваши данные защищены и не передаются третьим лицам
+  - button "Open Next.js Dev Tools" [ref=e80] [cursor=pointer]:
+    - img [ref=e81]
+  - alert [ref=e84]

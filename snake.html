@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Змейка</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1a1a2e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      text-shadow: 0 0 20px #00ff7f88;
+      letter-spacing: 4px;
+      color: #00ff7f;
+    }
+    #score-panel {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 14px;
+      font-size: 1rem;
+      color: #aaffcc;
+    }
+    #score-panel span { font-weight: bold; color: #00ff7f; }
+    canvas {
+      border: 2px solid #00ff7f44;
+      border-radius: 8px;
+      box-shadow: 0 0 40px #00ff7f22;
+      background: #0d1117;
+    }
+    #message {
+      margin-top: 16px;
+      font-size: 1.1rem;
+      color: #aaffcc;
+      height: 28px;
+    }
+    #controls {
+      margin-top: 12px;
+      font-size: 0.8rem;
+      color: #556677;
+    }
+  </style>
+</head>
+<body>
+  <h1>ЗМЕЙКА</h1>
+  <div id="score-panel">
+    <div>Счёт: <span id="score">0</span></div>
+    <div>Рекорд: <span id="best">0</span></div>
+  </div>
+  <canvas id="c" width="500" height="500"></canvas>
+  <div id="message">Нажмите любую стрелку для старта</div>
+  <div id="controls">Управление: стрелки / WASD &nbsp;|&nbsp; Пауза: P</div>
+
+<script>
+const CELL = 20;
+const COLS = 25;
+const ROWS = 25;
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width  = COLS * CELL;
+canvas.height = ROWS * CELL;
+
+let snake, dir, nextDir, food, score, best, running, paused, animId, tick;
+best = 0;
+
+// ─── Змеиная кожа: паттерн чешуи ───────────────────────────────────────────
+function makeScalePattern(baseColor, highlightColor, shadowColor) {
+  const pc = document.createElement('canvas');
+  pc.width  = CELL;
+  pc.height = CELL;
+  const px = pc.getContext('2d');
+
+  // Фон сегмента
+  px.fillStyle = baseColor;
+  px.fillRect(0, 0, CELL, CELL);
+
+  // Чешуйка — полукруг сверху
+  const cx = CELL / 2, cy = CELL * 0.55, r = CELL * 0.45;
+
+  // Тень (снизу чешуйки)
+  px.beginPath();
+  px.arc(cx, cy, r, 0, Math.PI);
+  px.fillStyle = shadowColor;
+  px.fill();
+
+  // Тело чешуйки
+  const grad = px.createRadialGradient(cx, cy - r * 0.3, r * 0.05, cx, cy - r * 0.1, r * 0.95);
+  grad.addColorStop(0, highlightColor);
+  grad.addColorStop(0.5, baseColor);
+  grad.addColorStop(1, shadowColor);
+
+  px.beginPath();
+  px.arc(cx, cy, r * 0.88, Math.PI, 2 * Math.PI);
+  px.fillStyle = grad;
+  px.fill();
+
+  // Блик
+  px.beginPath();
+  px.ellipse(cx - r * 0.15, cy - r * 0.4, r * 0.22, r * 0.12, -0.4, 0, Math.PI * 2);
+  px.fillStyle = 'rgba(255,255,255,0.35)';
+  px.fill();
+
+  // Тонкая граница
+  px.beginPath();
+  px.arc(cx, cy, r * 0.88, Math.PI, 2 * Math.PI);
+  px.strokeStyle = 'rgba(0,0,0,0.18)';
+  px.lineWidth = 0.7;
+  px.stroke();
+
+  return ctx.createPattern(pc, 'repeat');
+}
+
+const SCALE_BODY    = makeScalePattern('#2d8f3f', '#72e87c', '#145a20');
+const SCALE_DARK    = makeScalePattern('#236b30', '#5ad068', '#0f4519');
+const SCALE_HEAD    = makeScalePattern('#3aaa50', '#90ff9a', '#1a7030');
+
+// ─── Еда ────────────────────────────────────────────────────────────────────
+function drawFood() {
+  const x = food.x * CELL + CELL / 2;
+  const y = food.y * CELL + CELL / 2;
+  const r = CELL / 2 - 2;
+  const t = Date.now() / 500;
+  const pulse = 1 + 0.08 * Math.sin(t);
+
+  // Свечение
+  const glow = ctx.createRadialGradient(x, y, r * 0.1, x, y, r * 1.8 * pulse);
+  glow.addColorStop(0, 'rgba(255,60,60,0.5)');
+  glow.addColorStop(1, 'rgba(255,0,0,0)');
+  ctx.beginPath();
+  ctx.arc(x, y, r * 1.8 * pulse, 0, Math.PI * 2);
+  ctx.fillStyle = glow;
+  ctx.fill();
+
+  // Яблоко
+  const fg = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.05, x, y, r * pulse);
+  fg.addColorStop(0, '#ff9090');
+  fg.addColorStop(0.4, '#e03030');
+  fg.addColorStop(1, '#7a0000');
+  ctx.beginPath();
+  ctx.arc(x, y, r * pulse, 0, Math.PI * 2);
+  ctx.fillStyle = fg;
+  ctx.fill();
+
+  // Блик
+  ctx.beginPath();
+  ctx.ellipse(x - r * 0.2, y - r * 0.25, r * 0.25, r * 0.14, -0.5, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fill();
+
+  // Хвостик
+  ctx.beginPath();
+  ctx.moveTo(x + 1, y - r * pulse);
+  ctx.quadraticCurveTo(x + r * 0.5, y - r * 1.4 * pulse, x + r * 0.2, y - r * 1.1 * pulse);
+  ctx.strokeStyle = '#3a7a20';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+}
+
+// ─── Рисовка сегмента змеи ──────────────────────────────────────────────────
+function drawSegment(x, y, pattern, radius) {
+  const px = x * CELL, py = y * CELL;
+  const r = radius ?? 4;
+  ctx.save();
+  ctx.translate(px, py);
+  ctx.beginPath();
+  ctx.roundRect(1, 1, CELL - 2, CELL - 2, r);
+  ctx.fillStyle = pattern;
+  ctx.fill();
+  // Внутренняя тень для объёма
+  const inner = ctx.createLinearGradient(0, 0, 0, CELL);
+  inner.addColorStop(0, 'rgba(255,255,255,0.12)');
+  inner.addColorStop(0.5, 'rgba(0,0,0,0)');
+  inner.addColorStop(1, 'rgba(0,0,0,0.25)');
+  ctx.fillStyle = inner;
+  ctx.fill();
+  ctx.restore();
+}
+
+// ─── Голова змеи с глазами ──────────────────────────────────────────────────
+function drawHead(seg, d) {
+  drawSegment(seg.x, seg.y, SCALE_HEAD, 7);
+  const px = seg.x * CELL + CELL / 2;
+  const py = seg.y * CELL + CELL / 2;
+
+  // Позиции глаз зависят от направления
+  const eyes = {
+    right: [{ ex: 0.25, ey: -0.25 }, { ex: 0.25, ey: 0.25 }],
+    left:  [{ ex: -0.25, ey: -0.25 }, { ex: -0.25, ey: 0.25 }],
+    up:    [{ ex: -0.25, ey: -0.25 }, { ex: 0.25, ey: -0.25 }],
+    down:  [{ ex: -0.25, ey: 0.25 }, { ex: 0.25, ey: 0.25 }],
+  }[d] || [];
+
+  eyes.forEach(({ ex, ey }) => {
+    const ex2 = px + ex * CELL, ey2 = py + ey * CELL;
+    // Белок
+    ctx.beginPath();
+    ctx.arc(ex2, ey2, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    // Зрачок
+    const dx = d === 'right' ? 1 : d === 'left' ? -1 : 0;
+    const dy = d === 'down'  ? 1 : d === 'up'   ? -1 : 0;
+    ctx.beginPath();
+    ctx.arc(ex2 + dx * 1.2, ey2 + dy * 1.2, 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = '#111';
+    ctx.fill();
+    // Блик
+    ctx.beginPath();
+    ctx.arc(ex2 + dx * 0.5 - 0.8, ey2 + dy * 0.5 - 0.8, 0.7, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fill();
+  });
+}
+
+// ─── Сетка ──────────────────────────────────────────────────────────────────
+function drawGrid() {
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= COLS; i++) {
+    ctx.beginPath(); ctx.moveTo(i * CELL, 0); ctx.lineTo(i * CELL, canvas.height); ctx.stroke();
+  }
+  for (let j = 0; j <= ROWS; j++) {
+    ctx.beginPath(); ctx.moveTo(0, j * CELL); ctx.lineTo(canvas.width, j * CELL); ctx.stroke();
+  }
+}
+
+// ─── Инициализация ──────────────────────────────────────────────────────────
+function init() {
+  snake = [
+    { x: 12, y: 12 },
+    { x: 11, y: 12 },
+    { x: 10, y: 12 },
+  ];
+  dir = nextDir = 'right';
+  score = 0;
+  running = false;
+  paused = false;
+  document.getElementById('score').textContent = 0;
+  spawnFood();
+  render();
+}
+
+function spawnFood() {
+  let pos;
+  do {
+    pos = { x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS) };
+  } while (snake.some(s => s.x === pos.x && s.y === pos.y));
+  food = pos;
+}
+
+// ─── Игровой цикл ───────────────────────────────────────────────────────────
+function step() {
+  if (!running || paused) return;
+  dir = nextDir;
+
+  const head = { ...snake[0] };
+  if (dir === 'right') head.x++;
+  if (dir === 'left')  head.x--;
+  if (dir === 'up')    head.y--;
+  if (dir === 'down')  head.y++;
+
+  // Стена
+  if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS) { gameOver(); return; }
+  // Сам себя
+  if (snake.some(s => s.x === head.x && s.y === head.y)) { gameOver(); return; }
+
+  snake.unshift(head);
+
+  if (head.x === food.x && head.y === food.y) {
+    score++;
+    if (score > best) best = score;
+    document.getElementById('score').textContent = score;
+    document.getElementById('best').textContent  = best;
+    spawnFood();
+  } else {
+    snake.pop();
+  }
+
+  render();
+  tick = Math.max(60, 150 - score * 3);
+  animId = setTimeout(step, tick);
+}
+
+function render() {
+  // Фон
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawGrid();
+  drawFood();
+
+  // Тело
+  for (let i = snake.length - 1; i >= 1; i--) {
+    const pattern = i % 2 === 0 ? SCALE_BODY : SCALE_DARK;
+    drawSegment(snake[i].x, snake[i].y, pattern);
+  }
+
+  // Голова
+  if (snake.length > 0) drawHead(snake[0], dir);
+}
+
+function gameOver() {
+  running = false;
+  clearTimeout(animId);
+  // Красный флэш
+  ctx.fillStyle = 'rgba(200,0,0,0.18)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#ff4444';
+  ctx.font = 'bold 36px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 20);
+  ctx.fillStyle = '#aaffcc';
+  ctx.font = '18px Segoe UI';
+  ctx.fillText(`Счёт: ${score}  |  Рекорд: ${best}`, canvas.width / 2, canvas.height / 2 + 18);
+  ctx.fillStyle = '#556677';
+  ctx.font = '14px Segoe UI';
+  ctx.fillText('Нажмите любую стрелку для новой игры', canvas.width / 2, canvas.height / 2 + 50);
+  document.getElementById('message').textContent = '';
+}
+
+// ─── Управление ─────────────────────────────────────────────────────────────
+const keyMap = {
+  ArrowRight: 'right', ArrowLeft: 'left', ArrowUp: 'up', ArrowDown: 'down',
+  KeyD: 'right', KeyA: 'left', KeyW: 'up', KeyS: 'down',
+};
+const opposite = { right: 'left', left: 'right', up: 'down', down: 'up' };
+
+document.addEventListener('keydown', e => {
+  if (e.code === 'KeyP') {
+    if (!running) return;
+    paused = !paused;
+    document.getElementById('message').textContent = paused ? 'Пауза' : '';
+    if (!paused) step();
+    return;
+  }
+  const d = keyMap[e.code];
+  if (!d) return;
+  e.preventDefault();
+  if (!running) {
+    running = true;
+    document.getElementById('message').textContent = '';
+    init();
+    running = true;
+    nextDir = d;
+    step();
+    return;
+  }
+  if (d !== opposite[dir]) nextDir = d;
+});
+
+// ─── Старт ──────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>

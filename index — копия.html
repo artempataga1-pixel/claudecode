@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Свежий Климат — Отделка зданий. Факты. Сроки. Гарантия.</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Barlow Condensed', 'sans-serif'],
+            body: ['IBM Plex Sans', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --gold: #f0b429;
+      --gold-dark: #c8920a;
+      --ink: #0f0f1c;
+      --ink2: #161625;
+      --line: rgba(240,180,41,0.15);
+    }
+    * { font-family: 'IBM Plex Sans', sans-serif; }
+    h1,h2,h3,h4,.fd { font-family: 'Barlow Condensed', sans-serif; }
+
+    /* Reveal */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .65s cubic-bezier(.25,.8,.25,1),transform .65s cubic-bezier(.25,.8,.25,1); }
+    .reveal.in { opacity:1; transform:none; }
+
+    /* Nav link */
+    .nav-a { position:relative; font-family:'Barlow Condensed',sans-serif; font-weight:600; font-size:13px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.55); transition:color .2s; }
+    .nav-a::after { content:''; position:absolute; bottom:-4px; left:0; width:0; height:2px; background:var(--gold); transition:width .25s; }
+    .nav-a:hover { color:#fff; }
+    .nav-a:hover::after { width:100%; }
+
+    /* Buttons */
+    .btn { display:inline-block; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:14px; letter-spacing:.14em; text-transform:uppercase; transition:all .2s; }
+    .btn-gold { background:var(--gold); color:var(--ink); padding:14px 32px; }
+    .btn-gold:hover { background:#fcd97d; transform:translateY(-2px); box-shadow:0 8px 24px rgba(240,180,41,.3); }
+    .btn-outline { border:2px solid rgba(255,255,255,.25); color:#fff; padding:12px 32px; }
+    .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+    /* Gold rule */
+    .gr { display:block; width:40px; height:3px; background:var(--gold); margin-bottom:1.2rem; }
+
+    /* Ghost section number */
+    .sn { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:clamp(72px,12vw,140px); color:transparent; -webkit-text-stroke:1px rgba(240,180,41,.07); line-height:1; user-select:none; pointer-events:none; }
+
+    /* Card lift */
+    .lift { transition:transform .25s,box-shadow .25s; }
+    .lift:hover { transform:translateY(-5px); box-shadow:0 20px 48px rgba(0,0,0,.5); }
+
+    /* Image overlay card */
+    .img-card { position:relative; overflow:hidden; }
+    .img-card img { transition:transform .5s ease; }
+    .img-card:hover img { transform:scale(1.06); }
+    .img-card .overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.85) 0%, rgba(0,0,0,.1) 60%); }
+
+    /* Mobile menu */
+    #mob { max-height:0; overflow:hidden; transition:max-height .35s ease,opacity .3s; opacity:0; }
+    #mob.open { max-height:400px; opacity:1; }
+
+    /* Ticker */
+    @keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .tick-track { display:flex; width:max-content; animation:tick 30s linear infinite; }
+    .tick-track:hover { animation-play-state:paused; }
+
+    /* Counter */
+    .count { display:inline-block; }
+
+    /* Step line */
+    .step-row { border-bottom:1px solid var(--line); transition:background .2s; }
+    .step-row:hover { background:rgba(240,180,41,.04); }
+
+    /* Project grid */
+    .proj-grid { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:auto auto; gap:12px; }
+    @media(min-width:768px){ .proj-grid { grid-template-columns:2fr 1fr 1fr; grid-template-rows:auto auto; } }
+
+    /* Testimonial carousel */
+    .tc-slide { display:none; }
+    .tc-slide.active { display:flex; }
+
+    /* Float CTA */
+    .float-cta { position:fixed; bottom:32px; right:32px; z-index:100; background:var(--gold); color:var(--ink); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:13px; letter-spacing:.1em; text-transform:uppercase; padding:14px 22px; display:flex; align-items:center; gap:8px; box-shadow:0 8px 32px rgba(240,180,41,.35); transition:all .2s; }
+    .float-cta:hover { background:#fcd97d; transform:translateY(-2px); box-shadow:0 12px 40px rgba(240,180,41,.45); }
+
+    /* Form input */
+    .fi { width:100%; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); color:#fff; padding:14px 16px; font-size:14px; transition:border-color .2s; }
+    .fi::placeholder { color:rgba(255,255,255,.3); }
+    .fi:focus { outline:none; border-color:var(--gold); }
+    .fi option { background:#1e1e30; }
+
+    /* Badge */
+    .badge { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); padding:7px 14px; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); }
+
+    /* Grain */
+    body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity:.022; }
+  </style>
+</head>
+
+<body class="bg-[#0f0f1c] text-white overflow-x-hidden">
+
+<!-- ════════════ FLOATING CTA ════════════ -->
+<a href="#form" class="float-cta">
+  <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" d="M3 5h18M3 12h18M3 19h18"/></svg>
+  Получить расчёт
+</a>
+
+
+<!-- ════════════ HEADER ════════════ -->
+<header id="hdr" class="fixed top-0 left-0 right-0 z-50 bg-[#0f0f1c]/90 backdrop-blur-md border-b border-[var(--line)]">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-[72px]">
+
+      <a href="#hero" class="flex items-center gap-3 group">
+        <div class="relative w-8 h-8 flex-shrink-0">
+          <div class="absolute inset-0 bg-[var(--gold)] opacity-20 group-hover:opacity-30 transition-opacity"></div>
+          <div class="absolute inset-[3px] border border-[var(--gold)] flex items-center justify-center">
+            <div class="w-2 h-2 bg-[var(--gold)]"></div>
+          </div>
+        </div>
+        <div>
+          <span class="fd font-bold text-xl tracking-[.08em] text-white uppercase leading-tight">Свежий Климат</span>
+          <span class="block text-[10px] tracking-[.18em] uppercase text-[var(--gold)]/70 font-light">Отделка зданий · с 2014</span>
+        </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-8">
+        <a href="#advantages" class="nav-a">Преимущества</a>
+        <a href="#services"   class="nav-a">Услуги</a>
+        <a href="#projects"   class="nav-a">Проекты</a>
+        <a href="#about"      class="nav-a">О нас</a>
+        <a href="#contacts"   class="nav-a">Контакты</a>
+      </nav>
+
+      <a href="#form" class="hidden lg:block btn btn-gold">Получить расчёт</a>
+
+      <button id="burger" class="lg:hidden p-2 text-white/60 hover:text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="square" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="mob">
+      <nav class="flex flex-col pb-4 pt-3 gap-1 border-t border-[var(--line)]">
+        <a href="#advantages" class="mob-a fd font-semibold text-sm uppercase tracking-widest text-white/55 hover:text-[var(--gold)] py-2 transition-colors">Преимущества</a>
+        <a href="#services"   class="mob-a fd font-semibold text-sm uppercase tracking-widest text-white/55 hover:text-[var(--gold)] py-2 transition-colors">Услуги</a>
+        <a href="#projects"   class="mob-a fd font-semibold text-sm uppercase tracking-widest text-white/55 hover:text-[var(--gold)] py-2 transition-colors">Проекты</a>
+        <a href="#about"      class="mob-a fd font-semibold text-sm uppercase tracking-widest text-white/55 hover:text-[var(--gold)] py-2 transition-colors">О нас</a>
+        <a href="#contacts"   class="mob-a fd font-semibold text-sm uppercase tracking-widest text-white/55 hover:text-[var(--gold)] py-2 transition-colors">Контакты</a>
+        <a href="#form" class="mob-a mt-2 btn btn-gold text-center">Получить расчёт</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+
+<!-- ════════════ HERO ════════════ -->
+<section id="hero" class="relative min-h-screen flex flex-col pt-16 lg:pt-[72px] overflow-hidden">
+
+  <!-- Background image -->
+  <div class="absolute inset-0 z-0">
+    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&q=80"
+         alt="Строительство"
+         class="w-full h-full object-cover object-center"
+         onerror="this.style.display='none'" />
+    <div class="absolute inset-0" style="background:linear-gradient(105deg,rgba(10,10,22,.97) 0%,rgba(10,10,22,.88) 55%,rgba(10,10,22,.55) 100%)"></div>
+    <!-- Subtle grid -->
+    <div class="absolute inset-0" style="background-image:linear-gradient(rgba(240,180,41,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(240,180,41,.03) 1px,transparent 1px);background-size:80px 80px"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 flex-1 flex flex-col justify-center py-16 lg:py-0">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center min-h-[calc(100vh-72px)]">
+
+      <!-- Headline -->
+      <div class="lg:col-span-7 flex flex-col justify-center">
+        <div class="flex items-center gap-3 mb-7 reveal">
+          <div class="h-px w-10 bg-[var(--gold)]"></div>
+          <span class="fd text-[var(--gold)] text-xs uppercase tracking-[.25em] font-semibold">Москва и область</span>
+        </div>
+
+        <h1 class="fd font-black text-white leading-[.9] uppercase mb-7 reveal" style="font-size:clamp(52px,9vw,112px);transition-delay:.07s">
+          ООО<br/>
+          <span class="text-[var(--gold)]">«Свежий</span><br/>
+          Климат»
+        </h1>
+
+        <p class="text-white/50 font-light leading-relaxed max-w-md mb-9 reveal" style="font-size:16px;transition-delay:.14s">
+          Берём объекты под ключ: от фасадов до чистовой отделки. Сроки и цена фиксируются в договоре. Гарантия 5&nbsp;лет.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 mb-9 reveal" style="transition-delay:.2s">
+          <a href="#form" class="btn btn-gold">Рассчитать стоимость</a>
+          <a href="#projects" class="btn btn-outline">Смотреть проекты</a>
+        </div>
+
+        <div class="flex flex-wrap gap-3 reveal" style="transition-delay:.27s">
+          <span class="badge">📄 Договор</span>
+          <span class="badge">🛡 Гарантия 5 лет</span>
+          <span class="badge">⚡ Смета за 24 ч</span>
+        </div>
+      </div>
+
+      <!-- Stats panel -->
+      <div class="lg:col-span-5 reveal" style="transition-delay:.12s">
+        <div class="border border-[var(--line)] bg-[rgba(10,10,22,.6)] backdrop-blur-sm divide-y divide-[var(--line)]">
+          <div class="px-7 py-6 flex items-start gap-5">
+            <div class="fd font-black text-[var(--gold)] leading-none" style="font-size:clamp(38px,5vw,58px)"><span class="count" data-target="200">0</span>+</div>
+            <div class="pt-1">
+              <div class="fd font-bold text-white uppercase tracking-wide text-base">Сданных объектов</div>
+              <div class="text-white/38 text-xs mt-1 font-light">ЖК, бизнес-центры, частные дома</div>
+            </div>
+          </div>
+          <div class="px-7 py-6 flex items-start gap-5">
+            <div class="fd font-black text-[var(--gold)] leading-none" style="font-size:clamp(38px,5vw,58px)"><span class="count" data-target="10">0</span></div>
+            <div class="pt-1">
+              <div class="fd font-bold text-white uppercase tracking-wide text-base">Лет на рынке</div>
+              <div class="text-white/38 text-xs mt-1 font-light">Работаем с 2014 года</div>
+            </div>
+          </div>
+          <div class="px-7 py-6 flex items-start gap-5">
+            <div class="fd font-black text-[var(--gold)] leading-none" style="font-size:clamp(38px,5vw,58px)"><span class="count" data-target="80">0</span></div>
+            <div class="pt-1">
+              <div class="fd font-bold text-white uppercase tracking-wide text-base">Специалистов</div>
+              <div class="text-white/38 text-xs mt-1 font-light">Только штатные, без субподряда</div>
+            </div>
+          </div>
+          <div class="px-7 py-6 flex items-start gap-5">
+            <div class="fd font-black text-[var(--gold)] leading-none" style="font-size:clamp(38px,5vw,58px)">5</div>
+            <div class="pt-1">
+              <div class="fd font-bold text-white uppercase tracking-wide text-base">Лет гарантии</div>
+              <div class="text-white/38 text-xs mt-1 font-light">Прописано в договоре</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="relative z-10 flex justify-center pb-8 reveal" style="transition-delay:.4s">
+    <div class="flex flex-col items-center gap-2 text-white/25">
+      <span class="fd text-xs uppercase tracking-widest">Прокрутите вниз</span>
+      <svg class="w-5 h-5 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M19 9l-7 7-7-7"/></svg>
+    </div>
+  </div>
+</section>
+
+
+<!-- Ticker -->
+<div class="overflow-hidden border-y border-[var(--line)] bg-[#0d0d19] py-3 relative z-10">
+  <div class="tick-track">
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Штукатурка фасадов</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Внутренняя отделка под ключ</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Вентилируемые фасады</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Утепление зданий</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Укладка плитки</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Покраска фасадов</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Штукатурка фасадов</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Внутренняя отделка под ключ</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Вентилируемые фасады</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Утепление зданий</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Укладка плитки</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+    <span class="fd font-bold text-xs uppercase tracking-[.2em] text-white/18 px-10">Покраска фасадов</span>
+    <span class="text-[var(--gold)]/25 px-4">◆</span>
+  </div>
+</div>
+
+
+<!-- ════════════ ADVANTAGES ════════════ -->
+<section id="advantages" class="py-24 lg:py-32">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="flex items-end gap-6 mb-14 reveal">
+      <div class="sn">01</div>
+      <div class="pb-3">
+        <span class="gr"></span>
+        <h2 class="fd font-black uppercase text-white leading-none" style="font-size:clamp(30px,5vw,52px)">Почему выбирают нас</h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-[var(--line)]">
+
+      <div class="lift bg-[#0f0f1c] p-8 reveal">
+        <div class="w-12 h-12 border border-[var(--line)] flex items-center justify-center text-2xl mb-5">🏗️</div>
+        <h3 class="fd font-bold uppercase text-white text-xl tracking-wide mb-2">10 лет на рынке</h3>
+        <p class="text-white/40 text-sm leading-relaxed font-light">Опыт на объектах любой сложности. Ни одного незавершённого контракта за 10 лет.</p>
+      </div>
+
+      <div class="lift bg-[#0f0f1c] p-8 reveal" style="transition-delay:.05s">
+        <div class="w-12 h-12 border border-[var(--line)] flex items-center justify-center text-2xl mb-5">🛡️</div>
+        <h3 class="fd font-bold uppercase text-white text-xl tracking-wide mb-2">Гарантия 5 лет</h3>
+        <p class="text-white/40 text-sm leading-relaxed font-light">Зафиксировано в договоре. Приедем по гарантийному случаю без звонков и отговорок.</p>
+      </div>
+
+      <div class="lift bg-[#0f0f1c] p-8 reveal" style="transition-delay:.1s">
+        <div class="w-12 h-12 border border-[var(--line)] flex items-center justify-center text-2xl mb-5">🔑</div>
+        <h3 class="fd font-bold uppercase text-white text-xl tracking-wide mb-2">Под ключ</h3>
+        <p class="text-white/40 text-sm leading-relaxed font-light">Один договор — от замера до финальной уборки. Никаких «это не наше».</p>
+      </div>
+
+      <div class="lift bg-[#0f0f1c] p-8 reveal" style="transition-delay:.05s">
+        <div class="w-12 h-12 border border-[var(--line)] flex items-center justify-center text-2xl mb-5">👷</div>
+        <h3 class="fd font-bold uppercase text-white text-xl tracking-wide mb-2">Собственные бригады</h3>
+        <p class="text-white/40 text-sm leading-relaxed font-light">80 штатных мастеров. Никакого субподряда — только проверенные специалисты.</p>
+      </div>
+
+      <div class="lift bg-[#0f0f1c] p-8 reveal" style="transition-delay:.1s">
+        <div class="w-12 h-12 border border-[var(--line)] flex items-center justify-center text-2xl mb-5">⏱️</div>
+        <h3 class="fd font-bold uppercase text-white text-xl tracking-wide mb-2">Точные сроки</h3>
+        <p class="text-white/40 text-sm leading-relaxed font-light">Срок в договоре — это дедлайн. Штраф за просрочку прописан отдельным пунктом.</p>
+      </div>
+
+      <div class="lift bg-[#0f0f1c] p-8 reveal" style="transition-delay:.15s">
+        <div class="w-12 h-12 border border-[var(--line)] flex items-center justify-center text-2xl mb-5">📋</div>
+        <h3 class="fd font-bold uppercase text-white text-xl tracking-wide mb-2">Честная смета</h3>
+        <p class="text-white/40 text-sm leading-relaxed font-light">Детальный расчёт за 24 часа. Цена финальная — без скрытых доплат по ходу работ.</p>
+      </div>
+
+    </div>
+
+    <!-- ЦА блоки -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+      <div class="border-t-2 border-[var(--gold)] bg-[#161625] p-7 reveal">
+        <div class="fd font-bold uppercase text-[var(--gold)] text-base tracking-wide mb-3">🏢 Застройщикам</div>
+        <p class="text-white/45 text-sm leading-relaxed font-light">Работаем с ЖК любой очерёдности. Гарантия юридически оформлена. Портфолио и рекомендательные письма по запросу.</p>
+      </div>
+      <div class="border-t-2 border-[var(--gold)] bg-[#161625] p-7 reveal" style="transition-delay:.07s">
+        <div class="fd font-bold uppercase text-[var(--gold)] text-base tracking-wide mb-3">💼 Бизнесу</div>
+        <p class="text-white/45 text-sm leading-relaxed font-light">Офисы, ТЦ, склады. Работаем в ночные смены, чтобы не останавливать ваши процессы. Смета без сюрпризов.</p>
+      </div>
+      <div class="border-t-2 border-[var(--gold)] bg-[#161625] p-7 reveal" style="transition-delay:.14s">
+        <div class="fd font-bold uppercase text-[var(--gold)] text-base tracking-wide mb-3">🏠 Частным клиентам</div>
+        <p class="text-white/45 text-sm leading-relaxed font-light">Понимаем страхи: бригада пропала, смета выросла. У нас — фиксированная цена в договоре и еженедельные фотоотчёты.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════ SERVICES ════════════ -->
+<section id="services" class="py-24 lg:py-32 bg-[#0d0d19]">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="flex items-end gap-6 mb-14 reveal">
+      <div class="sn">02</div>
+      <div class="pb-3">
+        <span class="gr"></span>
+        <h2 class="fd font-black uppercase text-white leading-none" style="font-size:clamp(30px,5vw,52px)">Что мы делаем</h2>
+      </div>
+    </div>
+
+    <!-- Service image cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+
+      <div class="img-card h-72 reveal">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80" alt="Плитка" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-5">
+          <div class="fd font-bold text-white uppercase text-lg tracking-wide">Плитка и керамогранит</div>
+          <div class="text-white/55 text-xs mt-1 font-light">Внутренняя отделка</div>
+        </div>
+      </div>
+
+      <div class="img-card h-72 reveal" style="transition-delay:.06s">
+        <img src="https://images.unsplash.com/photo-1505691723518-36a5ac3be353?w=600&q=80" alt="Покраска" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-5">
+          <div class="fd font-bold text-white uppercase text-lg tracking-wide">Покраска и обои</div>
+          <div class="text-white/55 text-xs mt-1 font-light">Внутренняя отделка</div>
+        </div>
+      </div>
+
+      <div class="img-card h-72 reveal" style="transition-delay:.12s">
+        <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80" alt="Фасад" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-5">
+          <div class="fd font-bold text-white uppercase text-lg tracking-wide">Штукатурка фасадов</div>
+          <div class="text-white/55 text-xs mt-1 font-light">Внешняя отделка</div>
+        </div>
+      </div>
+
+      <div class="img-card h-72 reveal" style="transition-delay:.18s">
+        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=600&q=80" alt="Здание" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-5">
+          <div class="fd font-bold text-white uppercase text-lg tracking-wide">Вентфасады</div>
+          <div class="text-white/55 text-xs mt-1 font-light">Внешняя отделка</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Full service lists -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <div class="border border-[var(--line)] p-8 reveal">
+        <div class="flex items-center gap-4 mb-7 pb-7 border-b border-[var(--line)]">
+          <div class="w-10 h-10 border border-[var(--gold)]/40 flex items-center justify-center text-lg flex-shrink-0">🏠</div>
+          <div>
+            <h3 class="fd font-bold text-white uppercase text-2xl tracking-wide">Внутренняя отделка</h3>
+            <div class="text-white/30 text-xs uppercase tracking-widest mt-0.5 fd">Квартиры · Офисы · Коммерция</div>
+          </div>
+        </div>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Штукатурка и шпаклёвка стен и потолков</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Укладка плитки, керамогранита, мозаики</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Напольные покрытия: ламинат, паркет, линолеум</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Покраска, обои, декоративные покрытия</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Натяжные и подвесные потолки (ГКЛ)</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Отделка санузлов, ванных и кухонь</span></li>
+        </ul>
+      </div>
+
+      <div class="border border-[var(--line)] p-8 reveal" style="transition-delay:.1s">
+        <div class="flex items-center gap-4 mb-7 pb-7 border-b border-[var(--line)]">
+          <div class="w-10 h-10 border border-[var(--gold)]/40 flex items-center justify-center text-lg flex-shrink-0">🏢</div>
+          <div>
+            <h3 class="fd font-bold text-white uppercase text-2xl tracking-wide">Внешняя отделка</h3>
+            <div class="text-white/30 text-xs uppercase tracking-widest mt-0.5 fd">Фасады · Утепление · Гидроизоляция</div>
+          </div>
+        </div>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Декоративная и защитная штукатурка фасадов</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Монтаж вентилируемых навесных фасадов</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Облицовка камнем, кирпичом, панелями</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Утепление фасадов (минвата, пенополистирол)</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Гидроизоляция и влагозащитные покрытия</span></li>
+          <li class="flex items-start gap-3"><div class="w-px h-4 bg-[var(--gold)] mt-1 flex-shrink-0"></div><span class="text-white/55 text-sm font-light">Покраска фасадными лакокрасочными материалами</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════ PROJECTS / PORTFOLIO ════════════ -->
+<section id="projects" class="py-24 lg:py-32">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="flex items-end gap-6 mb-14 reveal">
+      <div class="sn">03</div>
+      <div class="pb-3">
+        <span class="gr"></span>
+        <h2 class="fd font-black uppercase text-white leading-none" style="font-size:clamp(30px,5vw,52px)">Наши проекты</h2>
+        <p class="text-white/38 text-sm font-light mt-2">Более 200 сданных объектов с 2014 года</p>
+      </div>
+    </div>
+
+    <!-- Masonry-style grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 auto-rows-[200px]">
+
+      <div class="img-card md:col-span-2 md:row-span-2 reveal">
+        <img src="https://images.unsplash.com/photo-1565538810643-b5bdb714032a?w=800&q=80" alt="Жилой комплекс" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-6">
+          <div class="badge mb-2">Внешняя отделка</div>
+          <div class="fd font-bold text-white text-xl uppercase tracking-wide">ЖК «Северный Парк»</div>
+          <div class="text-white/50 text-xs mt-1">240 квартир · 2023</div>
+        </div>
+      </div>
+
+      <div class="img-card reveal" style="transition-delay:.07s">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80" alt="Офис" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-4">
+          <div class="fd font-bold text-white text-base uppercase tracking-wide">Офисный центр</div>
+          <div class="text-white/45 text-xs">4 этажа · 2023</div>
+        </div>
+      </div>
+
+      <div class="img-card reveal" style="transition-delay:.1s">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="Кухня" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-4">
+          <div class="fd font-bold text-white text-base uppercase tracking-wide">Кухня · под ключ</div>
+          <div class="text-white/45 text-xs">Частный заказчик · 2024</div>
+        </div>
+      </div>
+
+      <div class="img-card reveal" style="transition-delay:.13s">
+        <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=600&q=80" alt="Ванная" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-4">
+          <div class="fd font-bold text-white text-base uppercase tracking-wide">Ванная комната</div>
+          <div class="text-white/45 text-xs">Элитный ремонт · 2024</div>
+        </div>
+      </div>
+
+      <div class="img-card reveal" style="transition-delay:.16s">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Дом" class="w-full h-full object-cover" onerror="this.style.background='#1e1e30'" />
+        <div class="overlay"></div>
+        <div class="absolute bottom-0 left-0 p-4">
+          <div class="fd font-bold text-white text-base uppercase tracking-wide">Частный дом</div>
+          <div class="text-white/45 text-xs">Подмосковье · 2024</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-8 reveal">
+      <a href="#form" class="btn btn-outline">Обсудить ваш проект →</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════ STEPS ════════════ -->
+<section id="steps" class="py-24 lg:py-32 bg-[#0d0d19]">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="flex items-end gap-6 mb-14 reveal">
+      <div class="sn">04</div>
+      <div class="pb-3">
+        <span class="gr"></span>
+        <h2 class="fd font-black uppercase text-white leading-none" style="font-size:clamp(30px,5vw,52px)">Как мы работаем</h2>
+      </div>
+    </div>
+
+    <div class="border-t border-[var(--line)]">
+      <div class="step-row flex items-start gap-6 lg:gap-10 py-6 reveal">
+        <div class="w-12 h-12 border-2 border-[var(--gold)] flex items-center justify-center fd font-black text-[var(--gold)] text-lg flex-shrink-0">01</div>
+        <div class="flex-1 pt-1"><div class="fd font-bold text-white uppercase tracking-wide text-xl mb-1">Замер и консультация</div><div class="text-white/40 text-sm font-light">Выезжаем бесплатно. Оцениваем объём, сложность, материалы. Задаём вопросы — не ждём, что вы всё знаете.</div></div>
+      </div>
+      <div class="step-row flex items-start gap-6 lg:gap-10 py-6 reveal" style="transition-delay:.05s">
+        <div class="w-12 h-12 border-2 border-[var(--gold)] flex items-center justify-center fd font-black text-[var(--gold)] text-lg flex-shrink-0">02</div>
+        <div class="flex-1 pt-1"><div class="fd font-bold text-white uppercase tracking-wide text-xl mb-1">Смета за 24 часа</div><div class="text-white/40 text-sm font-light">Детальный расчёт по каждой позиции. Никаких «примерно» — только конкретные цифры, которые войдут в договор.</div></div>
+      </div>
+      <div class="step-row flex items-start gap-6 lg:gap-10 py-6 reveal" style="transition-delay:.1s">
+        <div class="w-12 h-12 border-2 border-[var(--gold)] flex items-center justify-center fd font-black text-[var(--gold)] text-lg flex-shrink-0">03</div>
+        <div class="flex-1 pt-1"><div class="fd font-bold text-white uppercase tracking-wide text-xl mb-1">Договор с гарантиями</div><div class="text-white/40 text-sm font-light">Фиксируем: сроки, цену, штраф за просрочку, гарантийные обязательства. Подписываем — и начинаем работать.</div></div>
+      </div>
+      <div class="step-row flex items-start gap-6 lg:gap-10 py-6 reveal" style="transition-delay:.15s">
+        <div class="w-12 h-12 border-2 border-[var(--gold)] flex items-center justify-center fd font-black text-[var(--gold)] text-lg flex-shrink-0">04</div>
+        <div class="flex-1 pt-1"><div class="fd font-bold text-white uppercase tracking-wide text-xl mb-1">Работы на объекте</div><div class="text-white/40 text-sm font-light">Бригада выходит точно по плану. Еженедельные фотоотчёты — видите прогресс без лишних звонков.</div></div>
+      </div>
+      <div class="step-row flex items-start gap-6 lg:gap-10 py-6 reveal" style="transition-delay:.2s">
+        <div class="w-12 h-12 border-2 border-[var(--gold)] flex items-center justify-center fd font-black text-[var(--gold)] text-lg flex-shrink-0">05</div>
+        <div class="flex-1 pt-1"><div class="fd font-bold text-white uppercase tracking-wide text-xl mb-1">Сдача объекта</div><div class="text-white/40 text-sm font-light">Принимаем вместе с вами. Все замечания устраняем до подписания акта.</div></div>
+      </div>
+      <div class="step-row flex items-start gap-6 lg:gap-10 py-6 reveal" style="transition-delay:.25s">
+        <div class="w-12 h-12 border-2 border-[var(--gold)] flex items-center justify-center fd font-black text-[var(--gold)] text-lg flex-shrink-0">06</div>
+        <div class="flex-1 pt-1"><div class="fd font-bold text-white uppercase tracking-wide text-xl mb-1">Гарантия 5 лет</div><div class="text-white/40 text-sm font-light">Выезжаем по гарантийным случаям. Гарантия действует на все виды работ и зафиксирована в договоре.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════ ABOUT ════════════ -->
+<section id="about" class="py-24 lg:py-32 relative overflow-hidden">
+  <div class="absolute inset-0 z-0">
+    <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1600&q=80" alt="Команда" class="w-full h-full object-cover opacity-10" onerror="this.style.display='none'" />
+    <div class="absolute inset-0 bg-[#0f0f1c]/90"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="flex items-end gap-6 mb-14 reveal">
+      <div class="sn">05</div>
+      <div class="pb-3">
+        <span class="gr"></span>
+        <h2 class="fd font-black uppercase text-white leading-none" style="font-size:clamp(30px,5vw,52px)">О компании</h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div class="reveal">
+        <p class="text-white/55 font-light text-base leading-relaxed mb-5">
+          С 2014 года выполняем отделочные работы в Москве и области. За это время завершили более 200 объектов: жилые комплексы, бизнес-центры, торговые помещения и частные дома.
+        </p>
+        <p class="text-white/55 font-light text-base leading-relaxed mb-5">
+          В штате 80 специалистов: штукатуры, плиточники, маляры, фасадчики. Принципиально не работаем с субподрядчиками — только так можно держать качество на каждом объекте.
+        </p>
+        <p class="text-white/55 font-light text-base leading-relaxed mb-8">
+          Работаем с застройщиками, управляющими компаниями и частными заказчиками. Масштаб не важен: беремся и за однокомнатную квартиру, и за целый жилой квартал.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <span class="badge">✓ Юридическое лицо</span>
+          <span class="badge">✓ СРО-членство</span>
+          <span class="badge">✓ Страхование объектов</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-px bg-[var(--line)] reveal" style="transition-delay:.1s">
+        <div class="bg-[#0f0f1c] p-7">
+          <div class="fd font-black text-[var(--gold)] mb-1" style="font-size:clamp(34px,5vw,54px);line-height:1"><span class="count" data-target="200">0</span>+</div>
+          <div class="fd font-semibold text-white uppercase text-sm tracking-wide">сданных объектов</div>
+        </div>
+        <div class="bg-[#0f0f1c] p-7">
+          <div class="fd font-black text-[var(--gold)] mb-1" style="font-size:clamp(34px,5vw,54px);line-height:1"><span class="count" data-target="80">0</span></div>
+          <div class="fd font-semibold text-white uppercase text-sm tracking-wide">специалистов</div>
+        </div>
+        <div class="bg-[#161625] p-7">
+          <div class="fd font-black text-[var(--gold)] mb-1" style="font-size:clamp(34px,5vw,54px);line-height:1"><span class="count" data-target="10">0</span></div>
+          <div class="fd font-semibold text-white uppercase text-sm tracking-wide">лет опыта</div>
+        </div>
+        <div class="bg-[#161625] p-7">
+          <div class="fd font-black text-[var(--gold)] mb-1" style="font-size:clamp(34px,5vw,54px);line-height:1">5</div>
+          <div class="fd font-semibold text-white uppercase text-sm tracking-wide">лет гарантии</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════ TESTIMONIALS ════════════ -->
+<section id="reviews" class="py-24 lg:py-32 bg-[#0d0d19]">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="flex items-end gap-6 mb-14 reveal">
+      <div class="sn">06</div>
+      <div class="pb-3">
+        <span class="gr"></span>
+        <h2 class="fd font-black uppercase text-white leading-none" style="font-size:clamp(30px,5vw,52px)">Отзывы клиентов</h2>
+      </div>
+    </div>
+
+    <!-- Carousel -->
+    <div class="relative reveal">
+      <div id="tc">
+        <!-- Slide 1 -->
+        <div class="tc-slide active flex-col md:flex-row gap-8 items-center">
+          <div class="flex-shrink-0">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop&crop=face&q=80" alt="Александр К." class="w-24 h-24 rounded-full object-cover border-2 border-[var(--gold)]/40" onerror="this.style.display='none'" />
+          </div>
+          <div class="border border-[var(--line)] p-8 flex-1">
+            <div class="text-[var(--gold)] text-lg mb-4">★★★★★</div>
+            <p class="text-white/60 text-base font-light leading-relaxed italic mb-6">«Сделали фасад нашего ЖК на 240 квартир за 3 месяца — точно в срок. Качество отличное, жильцы довольны. Работали аккуратно, убирали за собой. Документы в порядке. Однозначно рекомендую.»</p>
+            <div>
+              <div class="fd font-bold text-white uppercase tracking-wide">Александр К.</div>
+              <div class="text-white/35 text-xs font-light mt-0.5">Застройщик · ЖК «Новые Черёмушки»</div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="tc-slide flex-col md:flex-row gap-8 items-center">
+          <div class="flex-shrink-0">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop&crop=face&q=80" alt="Марина П." class="w-24 h-24 rounded-full object-cover border-2 border-[var(--gold)]/40" onerror="this.style.display='none'" />
+          </div>
+          <div class="border border-[var(--line)] p-8 flex-1">
+            <div class="text-[var(--gold)] text-lg mb-4">★★★★★</div>
+            <p class="text-white/60 text-base font-light leading-relaxed italic mb-6">«Внутренняя отделка офисного центра, 4 этажа. Смету составили подробно. Итоговая цена не изменилась ни на рубль. Работали в ночные смены, не мешали бизнесу. Отличный партнёр.»</p>
+            <div>
+              <div class="fd font-bold text-white uppercase tracking-wide">Марина П.</div>
+              <div class="text-white/35 text-xs font-light mt-0.5">Управляющая компания · БЦ «Арбат»</div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="tc-slide flex-col md:flex-row gap-8 items-center">
+          <div class="flex-shrink-0">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop&crop=face&q=80" alt="Дмитрий С." class="w-24 h-24 rounded-full object-cover border-2 border-[var(--gold)]/40" onerror="this.style.display='none'" />
+          </div>
+          <div class="border border-[var(--line)] p-8 flex-1">
+            <div class="text-[var(--gold)] text-lg mb-4">★★★★★</div>
+            <p class="text-white/60 text-base font-light leading-relaxed italic mb-6">«Отделка частного дома под ключ. Боялся, что смета вырастет. Ничего подобного — цена осталась ровно такой, как в договоре. Прошло 2 года, всё держится идеально. Рекомендую без оговорок.»</p>
+            <div>
+              <div class="fd font-bold text-white uppercase tracking-wide">Дмитрий С.</div>
+              <div class="text-white/35 text-xs font-light mt-0.5">Частный заказчик · Подмосковье</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-4 mt-8">
+        <button onclick="prevSlide()" class="w-11 h-11 border border-[var(--line)] flex items-center justify-center text-white/50 hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors fd text-lg">←</button>
+        <div id="tc-dots" class="flex gap-2">
+          <button onclick="goSlide(0)" class="tc-dot w-8 h-1 bg-[var(--gold)] transition-all"></button>
+          <button onclick="goSlide(1)" class="tc-dot w-2 h-1 bg-white/20 transition-all"></button>
+          <button onclick="goSlide(2)" class="tc-dot w-2 h-1 bg-white/20 transition-all"></button>
+        </div>
+        <button onclick="nextSlide()" class="w-11 h-11 border border-[var(--line)] flex items-center justify-center text-white/50 hover:border-[var(--gold)] hover:text-[var(--gold)] transition-colors fd text-lg">→</button>
+        <span class="text-white/20 text-xs fd ml-2" id="tc-counter">1 / 3</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════ FORM ════════════ -->
+<section id="form" class="py-24 lg:py-32 relative overflow-hidden">
+  <div class="absolute inset-0 z-0" style="background:linear-gradient(135deg,#0f0f1c 0%,#1a1408 100%)"></div>
+  <div class="absolute inset-0 z-0" style="background-image:radial-gradient(circle at 70% 50%, rgba(240,180,41,.06) 0%, transparent 60%)"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="flex items-end gap-6 mb-14 reveal">
+      <div class="sn">07</div>
+      <div class="pb-3">
+        <span class="gr"></span>
+        <h2 class="fd font-black uppercase text-white leading-none" style="font-size:clamp(30px,5vw,52px)">Получить расчёт</h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+      <div class="reveal">
+        <p class="text-white/50 font-light text-base leading-relaxed mb-8">Заполните форму — менеджер перезвонит в течение 30 минут и подготовит детальный расчёт для вашего объекта.</p>
+        <div class="space-y-4 text-sm text-white/35 font-light">
+          <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-[var(--gold)]"></div>Смета — бесплатно и без обязательств</div>
+          <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-[var(--gold)]"></div>Выезд на объект — бесплатно</div>
+          <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-[var(--gold)]"></div>Ответ менеджера в течение 30 минут</div>
+          <div class="flex items-center gap-3"><div class="w-1.5 h-1.5 bg-[var(--gold)]"></div>Работаем по официальному договору</div>
+        </div>
+      </div>
+
+      <div class="reveal" style="transition-delay:.1s">
+        <form id="main-form" onsubmit="submitForm(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block fd font-semibold text-xs uppercase tracking-widest text-white/35 mb-2">Тип работ</label>
+              <select class="fi" required>
+                <option value="">Выберите</option>
+                <option>Внутренняя отделка</option>
+                <option>Внешняя отделка</option>
+                <option>Под ключ</option>
+              </select>
+            </div>
+            <div>
+              <label class="block fd font-semibold text-xs uppercase tracking-widest text-white/35 mb-2">Площадь, м²</label>
+              <input type="number" placeholder="Например: 120" min="1" class="fi" required />
+            </div>
+          </div>
+          <div>
+            <label class="block fd font-semibold text-xs uppercase tracking-widest text-white/35 mb-2">Тип объекта</label>
+            <select class="fi" required>
+              <option value="">Выберите</option>
+              <option>Квартира</option>
+              <option>Частный дом / коттедж</option>
+              <option>Офис</option>
+              <option>Торговое помещение</option>
+              <option>Жилой комплекс</option>
+              <option>Другое</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block fd font-semibold text-xs uppercase tracking-widest text-white/35 mb-2">Ваше имя</label>
+              <input type="text" placeholder="Иван Иванов" class="fi" required />
+            </div>
+            <div>
+              <label class="block fd font-semibold text-xs uppercase tracking-widest text-white/35 mb-2">Телефон</label>
+              <input type="tel" placeholder="+7 (999) 000-00-00" class="fi" required />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-gold w-full mt-2" style="font-size:15px;padding:15px">Получить расчёт →</button>
+          <p class="text-white/18 text-xs font-light text-center">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
+        </form>
+        <div id="form-ok" class="hidden border border-[var(--gold)]/30 p-10 text-center">
+          <div class="text-5xl mb-4">✅</div>
+          <div class="fd font-black text-[var(--gold)] text-3xl uppercase mb-2">Заявка принята!</div>
+          <p class="text-white/40 text-sm font-light">Менеджер свяжется с вами в течение 30 минут.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════ CONTACTS ════════════ -->
+<section id="contacts" class="py-24 lg:py-32 bg-[#0d0d19]">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+    <div class="flex items-end gap-6 mb-14 reveal">
+      <div class="sn">08</div>
+      <div class="pb-3">
+        <span class="gr"></span>
+        <h2 class="fd font-black uppercase text-white leading-none" style="font-size:clamp(30px,5vw,52px)">Контакты</h2>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[var(--line)]">
+      <div class="bg-[#0d0d19] p-7 reveal">
+        <div class="fd font-semibold text-xs uppercase tracking-widest text-[var(--gold)] mb-4">📍 Адрес</div>
+        <div class="text-white font-light text-sm leading-relaxed">г. Москва, ул. Строителей,<br/>д. 12, офис 304</div>
+      </div>
+      <div class="bg-[#0d0d19] p-7 reveal" style="transition-delay:.07s">
+        <div class="fd font-semibold text-xs uppercase tracking-widest text-[var(--gold)] mb-4">📞 Телефон</div>
+        <div class="text-white font-light text-sm leading-relaxed">+7 (495) 123-45-67<br/><span class="text-white/30 text-xs">WhatsApp / Telegram</span></div>
+      </div>
+      <div class="bg-[#0d0d19] p-7 reveal" style="transition-delay:.14s">
+        <div class="fd font-semibold text-xs uppercase tracking-widest text-[var(--gold)] mb-4">✉️ Email</div>
+        <div class="text-white font-light text-sm leading-relaxed">info@svezhiy-klimat.ru<br/><span class="text-white/30 text-xs">Ответ в течение часа</span></div>
+      </div>
+      <div class="bg-[#0d0d19] p-7 reveal" style="transition-delay:.21s">
+        <div class="fd font-semibold text-xs uppercase tracking-widest text-[var(--gold)] mb-4">🕐 График</div>
+        <div class="text-white font-light text-sm leading-relaxed">Пн–Пт: 09:00–19:00<br/>Сб: 10:00–16:00<br/><span class="text-white/30 text-xs">Вс — выходной</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════ FOOTER ════════════ -->
+<footer class="border-t border-[var(--line)] py-8">
+  <div class="max-w-7xl mx-auto px-5 sm:px-8 flex flex-col md:flex-row items-center justify-between gap-5">
+    <div class="flex items-center gap-3">
+      <div class="relative w-7 h-7 flex-shrink-0">
+        <div class="absolute inset-0 bg-[var(--gold)] opacity-20"></div>
+        <div class="absolute inset-[2px] border border-[var(--gold)] flex items-center justify-center"><div class="w-1.5 h-1.5 bg-[var(--gold)]"></div></div>
+      </div>
+      <span class="fd font-black text-white uppercase tracking-widest">Свежий Климат</span>
+    </div>
+    <nav class="flex flex-wrap justify-center gap-6">
+      <a href="#advantages" class="text-white/25 hover:text-[var(--gold)] text-xs uppercase tracking-widest fd font-semibold transition-colors">Преимущества</a>
+      <a href="#services"   class="text-white/25 hover:text-[var(--gold)] text-xs uppercase tracking-widest fd font-semibold transition-colors">Услуги</a>
+      <a href="#projects"   class="text-white/25 hover:text-[var(--gold)] text-xs uppercase tracking-widest fd font-semibold transition-colors">Проекты</a>
+      <a href="#about"      class="text-white/25 hover:text-[var(--gold)] text-xs uppercase tracking-widest fd font-semibold transition-colors">О нас</a>
+      <a href="#contacts"   class="text-white/25 hover:text-[var(--gold)] text-xs uppercase tracking-widest fd font-semibold transition-colors">Контакты</a>
+    </nav>
+    <div class="text-white/18 text-xs font-light">© 2024 ООО «Свежий Климат»</div>
+  </div>
+</footer>
+
+
+<!-- ════════════ SCRIPTS ════════════ -->
+<script>
+  // Burger
+  document.getElementById('burger').addEventListener('click', () => {
+    document.getElementById('mob').classList.toggle('open');
+  });
+  document.querySelectorAll('.mob-a').forEach(a => a.addEventListener('click', () => document.getElementById('mob').classList.remove('open')));
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Animated counters
+  function animateCount(el) {
+    const target = parseInt(el.dataset.target);
+    const dur = 1600;
+    const step = 16;
+    const inc = target / (dur / step);
+    let cur = 0;
+    const t = setInterval(() => {
+      cur += inc;
+      if (cur >= target) { cur = target; clearInterval(t); }
+      el.textContent = Math.floor(cur);
+    }, step);
+  }
+  const cio = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.count').forEach(animateCount);
+        cio.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('.reveal').forEach(el => cio.observe(el));
+
+  // Testimonial carousel
+  let tcIdx = 0;
+  const slides = document.querySelectorAll('.tc-slide');
+  const dots = document.querySelectorAll('.tc-dot');
+  const counter = document.getElementById('tc-counter');
+
+  function goSlide(n) {
+    slides[tcIdx].classList.remove('active');
+    dots[tcIdx].style.width = '8px';
+    dots[tcIdx].style.opacity = '0.2';
+    tcIdx = (n + slides.length) % slides.length;
+    slides[tcIdx].classList.add('active');
+    dots[tcIdx].style.width = '32px';
+    dots[tcIdx].style.opacity = '1';
+    counter.textContent = (tcIdx + 1) + ' / ' + slides.length;
+  }
+  function nextSlide() { goSlide(tcIdx + 1); }
+  function prevSlide() { goSlide(tcIdx - 1); }
+
+  // Auto-play
+  setInterval(nextSlide, 6000);
+
+  // Form submit
+  function submitForm(e) {
+    e.preventDefault();
+    document.getElementById('main-form').classList.add('hidden');
+    document.getElementById('form-ok').classList.remove('hidden');
+  }
+
+  // Hide float CTA near form
+  const formSection = document.getElementById('form');
+  const floatCta = document.querySelector('.float-cta');
+  window.addEventListener('scroll', () => {
+    const r = formSection.getBoundingClientRect();
+    floatCta.style.opacity = (r.top < window.innerHeight && r.bottom > 0) ? '0' : '1';
+  });
+</script>
+
+</body>
+</html>

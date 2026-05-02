@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AxenAI — Артём Патага</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<!-- Только нужные веса: Inter 300/700/800, JetBrains Mono 400/700 -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;700;800&family=JetBrains+Mono:wght@400;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;700;800&family=JetBrains+Mono:wght@400;700&display=swap"></noscript>
+<!-- defer — не блокирует парсинг HTML -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js" defer></script>
+<style>
+  :root {
+    --bg:       #000000;
+    --bg2:      #050a12;
+    --bg3:      #080f1a;
+    --bg4:      #0d1829;
+    --cyan:     #00e5ff;
+    --cyan-dim: rgba(0,229,255,0.15);
+    --cyan-glow:0 0 12px rgba(0,229,255,0.5), 0 0 30px rgba(0,229,255,0.2);
+    --green:    #00ff41;
+    --green-dim:rgba(0,255,65,0.12);
+    --blue:     #0066ff;
+    --border:   #0d1f3a;
+    --border-c: rgba(0,180,255,0.2);
+    --text:     #e2e8f0;
+    --text-dim: #4a6a8a;
+    --text-mono:#8ab4cc;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Inter',sans-serif; color:var(--text); }
+
+  .slide {
+    width:1920px; height:1080px;
+    position:relative; overflow:hidden;
+    background:var(--bg);
+    page-break-after:always; page-break-inside:avoid;
+    /* GPU-слой + изоляция рендеринга */
+    will-change: transform;
+    contain: layout style paint;
+  }
+
+  /* ---- SCAN LINES ---- */
+  .scanlines {
+    position:absolute; inset:0; pointer-events:none; z-index:50;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,255,0.015) 2px,rgba(0,229,255,0.015) 4px);
+    contain: strict;
+  }
+
+  /* ---- GRID BG ---- */
+  .grid-bg {
+    position:absolute; inset:0; pointer-events:none;
+    background-image:linear-gradient(rgba(0,229,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.04) 1px,transparent 1px);
+    background-size:80px 80px;
+    contain: strict;
+  }
+
+  /* ---- TOP ACCENT BAR ---- */
+  .top-bar {
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg,var(--cyan) 0%,var(--blue) 50%,transparent 100%);
+    box-shadow:0 0 20px rgba(0,229,255,0.6);
+  }
+
+  /* ---- LOGO CORNER ---- */
+  .logo-corner {
+    position:absolute; top:32px; right:52px;
+    display:flex; align-items:center; gap:12px; z-index:20;
+  }
+  .logo-corner img { width:34px; height:34px; object-fit:cover; border-radius:3px; }
+  .logo-corner span {
+    font-family:'JetBrains Mono',monospace;
+    font-size:14px; color:var(--cyan); letter-spacing:3px;
+    text-shadow:0 0 8px rgba(0,229,255,0.6);
+  }
+
+  /* ---- SLIDE NUM ---- */
+  .slide-num {
+    position:absolute; bottom:36px; right:52px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px; color:var(--text-dim); letter-spacing:3px;
+  }
+
+  /* ---- CORNER BRACKETS ---- */
+  .bracket { position:absolute; }
+  .bracket::before,.bracket::after { content:''; position:absolute; background:var(--cyan); }
+  .bracket.tl { top:20px; left:20px; }
+  .bracket.tl::before { top:0;left:0;width:48px;height:2px; }
+  .bracket.tl::after  { top:0;left:0;width:2px;height:48px; }
+  .bracket.br { bottom:20px; right:20px; }
+  .bracket.br::before { bottom:0;right:0;width:48px;height:2px; }
+  .bracket.br::after  { bottom:0;right:0;width:2px;height:48px; }
+
+  /* ---- LABEL ---- */
+  .label {
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px; font-weight:500; letter-spacing:3px;
+    text-transform:uppercase; color:var(--cyan);
+    margin-bottom:18px;
+  }
+  .label::before { content:'// '; opacity:0.5; }
+
+  /* ---- NEON DIVIDER ---- */
+  .neon-line {
+    height:1px;
+    background:linear-gradient(90deg,var(--cyan),transparent);
+    box-shadow:0 0 8px rgba(0,229,255,0.4);
+    margin:28px 0;
+  }
+  .neon-line-v {
+    width:1px;
+    background:linear-gradient(180deg,var(--cyan),rgba(0,229,255,0.1));
+    box-shadow:0 0 8px rgba(0,229,255,0.3);
+  }
+
+  /* ---- NEON CARD ---- */
+  .neon-card {
+    background:var(--bg3);
+    border:1px solid var(--border-c);
+    padding:36px;
+    position:relative;
+  }
+  .neon-card::before {
+    content:'';
+    position:absolute;
+    top:-1px; left:24px;
+    width:48px; height:2px;
+    background:var(--cyan);
+    box-shadow:0 0 8px var(--cyan);
+  }
+
+  /* ---- BROWSER MOCK ---- */
+  .browser {
+    background:var(--bg2);
+    border:1px solid var(--border-c);
+    box-shadow:0 0 30px rgba(0,229,255,0.1);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .browser-bar {
+    height:36px; background:var(--bg3);
+    border-bottom:1px solid var(--border-c);
+    display:flex; align-items:center; padding:0 14px; gap:7px;
+  }
+  .browser-dot { width:10px; height:10px; border-radius:50%; }
+  .browser-dot.r { background:#ff5f57; }
+  .browser-dot.y { background:#febc2e; }
+  .browser-dot.g { background:#28c840; }
+  .browser-url {
+    margin-left:10px; flex:1;
+    background:var(--bg2); border:1px solid var(--border);
+    border-radius:3px; height:22px;
+    display:flex; align-items:center; padding:0 10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px; color:var(--text-dim);
+  }
+
+  /* ---- CHECK ITEM ---- */
+  .check-item {
+    display:flex; align-items:flex-start; gap:16px; margin-bottom:22px;
+  }
+  .check-dot {
+    width:5px; height:5px; border-radius:50%;
+    background:var(--cyan); margin-top:10px; flex-shrink:0;
+    box-shadow:0 0 6px var(--cyan);
+  }
+
+  /* ---- TYPOGRAPHY ---- */
+  h1.hero {
+    font-size:96px; font-weight:800; line-height:0.95; letter-spacing:-3px;
+    color:#fff;
+  }
+  h1.hero .ax { color:var(--cyan); text-shadow:0 0 30px rgba(0,229,255,0.6); }
+  h2.section { font-size:60px; font-weight:700; line-height:1.05; letter-spacing:-1px; }
+  p.body { font-size:22px; font-weight:300; line-height:1.7; color:var(--text-dim); }
+  p.body-sm { font-size:19px; font-weight:300; line-height:1.7; color:var(--text-dim); }
+
+  /* ---- TAG ---- */
+  .tag {
+    display:inline-block; padding:6px 16px;
+    border:1px solid var(--border-c);
+    background:var(--cyan-dim);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px; color:var(--cyan); letter-spacing:1px;
+    margin:4px;
+  }
+
+  /* ---- STATUS DOT ---- */
+  .status-dot {
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--green); box-shadow:0 0 8px var(--green);
+  }
+
+  /* ---- PRINT ---- */
+  @page { size:1920px 1080px; margin:0; }
+  @media print {
+    .slide-outer { height:1080px !important; width:1920px !important; }
+    .slide { transform:none !important; page-break-after:always; page-break-inside:avoid; }
+    * { animation:none !important; transition:none !important; }
+    /* Убираем все свечения/тени — в PDF-вьюерах на мобиле они растеризуются в видимые рамки */
+    .grid-bg   { display:none !important; }
+    .scanlines { display:none !important; }
+    * { box-shadow:none !important; text-shadow:none !important; }
+  }
+
+  /* ---- MOBILE SCALE SHELL ---- */
+  html, body { overflow-x:hidden; margin:0; padding:0; }
+  .slide-outer {
+    /* clip-path клипает ВСЁ включая box-shadow дочерних элементов */
+    clip-path: inset(0);
+    position:relative;
+    background:var(--bg);
+    display:block;
+    font-size:0;
+    line-height:0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ================================================================ -->
+<!-- SLIDE 1: КТО Я                                                    -->
+<!-- ================================================================ -->
+<section class="slide" id="s1">
+  <div class="scanlines"></div>
+  <div class="grid-bg"></div>
+  <div class="top-bar"></div>
+
+  <!-- Radial glow -->
+  <div style="position:absolute;width:1000px;height:1000px;top:-300px;left:-200px;background:radial-gradient(circle,rgba(0,102,255,0.12) 0%,transparent 65%);pointer-events:none;"></div>
+  <div style="position:absolute;width:800px;height:800px;top:50%;right:-100px;transform:translateY(-50%);background:radial-gradient(circle,rgba(0,229,255,0.08) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <!-- Left content -->
+  <div style="position:absolute;left:140px;top:0;bottom:0;width:860px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;">
+      <span class="status-dot"></span>
+      <span class="label" style="margin-bottom:0;">Основатель AxenAI</span>
+    </div>
+
+    <h1 class="hero">Артём<br><span class="ax">Патага</span></h1>
+
+    <div class="neon-line" style="width:500px;margin-top:32px;"></div>
+
+    <p class="body" style="max-width:620px;margin-bottom:48px;">
+      Разработка сайтов и AI-решений<br>для бизнеса
+    </p>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <span class="tag">Омск</span>
+      <span class="tag">2026</span>
+      <span class="tag">Web</span>
+      <span class="tag">AI</span>
+    </div>
+  </div>
+
+  <!-- Right panel with logo -->
+  <div style="position:absolute;right:0;top:0;bottom:0;width:660px;background:var(--bg2);border-left:1px solid var(--border-c);">
+    <div class="grid-bg" style="opacity:0.5;"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+      <div style="width:240px;height:240px;border:1px solid var(--border-c);border-radius:4px;overflow:hidden;box-shadow:0 0 40px rgba(0,229,255,0.15),inset 0 0 40px rgba(0,229,255,0.05);margin:0 auto 28px;">
+        <img src="axenai_logo.jpg" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;color:var(--cyan);letter-spacing:6px;text-shadow:0 0 20px rgba(0,229,255,0.5);margin-top:20px;">AXENAI</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);letter-spacing:3px;margin-top:18px;">DIGITAL SOLUTIONS</div>
+    </div>
+    <!-- Bottom line -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);box-shadow:0 0 12px var(--cyan);"></div>
+  </div>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">01 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 2: КЛЮЧЕВАЯ МЫСЛЬ                                           -->
+<!-- ================================================================ -->
+<section class="slide" id="s2">
+  <div class="scanlines"></div>
+  <div class="grid-bg" style="opacity:0.4;"></div>
+  <div class="top-bar"></div>
+
+  <div style="position:absolute;width:900px;height:900px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,229,255,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;">
+    <div style="max-width:1480px;padding:0 120px;">
+      <div class="label" style="display:block;text-align:center;margin-bottom:56px;">// ПОЗИЦИЯ</div>
+      <h2 class="section" style="font-size:80px;font-weight:800;line-height:1.2;letter-spacing:-1px;">
+        Делаю то же, что студии —<br>
+        <span style="color:var(--cyan);text-shadow:0 0 24px rgba(0,229,255,0.55);">быстрее в 5 раз</span> и дешевле в разы.<br>
+        За счёт AI в основе процесса.
+      </h2>
+    </div>
+  </div>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI" loading="lazy" decoding="async"><span>AxenAI</span></div>
+  <div class="slide-num">02 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 3: ЧТО ДЕЛАЮ                                                -->
+<!-- ================================================================ -->
+<section class="slide" id="s3">
+  <div class="scanlines"></div>
+  <div class="grid-bg" style="opacity:0.5;"></div>
+  <div class="top-bar"></div>
+
+  <div style="position:absolute;width:700px;height:700px;bottom:-200px;right:-100px;background:radial-gradient(circle,rgba(0,102,255,0.1) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="position:absolute;top:90px;left:140px;right:140px;bottom:72px;display:grid;grid-template-columns:500px 1fr;gap:70px;">
+    <!-- Left -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="label" style="font-size:14px;letter-spacing:4px;">Услуги</div>
+      <h2 class="section" style="font-size:80px;margin-bottom:20px;">Что<br>делаю</h2>
+      <div class="neon-line" style="width:300px;"></div>
+      <p class="body" style="font-size:26px;line-height:1.6;">
+        Разрабатываю сайты под ключ с фокусом на бизнес-задачу клиента.
+      </p>
+      <div style="margin-top:32px;display:flex;flex-direction:column;gap:10px;">
+        <div class="check-item">
+          <div class="check-dot" style="background:var(--cyan);box-shadow:0 0 8px var(--cyan);width:7px;height:7px;margin-top:14px;"></div>
+          <p class="body-sm" style="font-size:24px;color:var(--cyan);font-weight:700;font-family:'JetBrains Mono',monospace;">Срок: 7–14 дней</p>
+        </div>
+        <div class="check-item">
+          <div class="check-dot" style="width:7px;height:7px;margin-top:14px;"></div>
+          <p class="body-sm" style="font-size:22px;">Без долгих согласований и лишних итераций</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div style="display:flex;flex-direction:column;justify-content:center;gap:0;">
+      <div style="margin-bottom:32px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);margin-bottom:22px;">// В РАБОТУ ВХОДИТ</div>
+        <div class="check-item"><div class="check-dot" style="width:7px;height:7px;margin-top:13px;"></div><p class="body-sm" style="font-size:22px;">Структура и дизайн сайта</p></div>
+        <div class="check-item"><div class="check-dot" style="width:7px;height:7px;margin-top:13px;"></div><p class="body-sm" style="font-size:22px;">Формы обращений и передача заявок</p></div>
+        <div class="check-item"><div class="check-dot" style="width:7px;height:7px;margin-top:13px;"></div><p class="body-sm" style="font-size:22px;">Базовая SEO-структура</p></div>
+        <div class="check-item"><div class="check-dot" style="width:7px;height:7px;margin-top:13px;"></div><p class="body-sm" style="font-size:22px;">Аналитика</p></div>
+        <div class="check-item"><div class="check-dot" style="width:7px;height:7px;margin-top:13px;"></div><p class="body-sm" style="font-size:22px;">Техническая подготовка к запуску</p></div>
+      </div>
+
+      <div style="height:1px;background:var(--border-c);margin-bottom:32px;"></div>
+
+      <div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);margin-bottom:22px;">// ДОПОЛНИТЕЛЬНО</div>
+        <div class="check-item">
+          <div style="width:7px;height:7px;border-radius:50%;background:rgba(0,229,255,0.4);margin-top:13px;flex-shrink:0;"></div>
+          <p class="body-sm" style="font-size:22px;">Интеграции и автоматизация обработки заявок</p>
+        </div>
+        <div class="check-item">
+          <div style="width:7px;height:7px;border-radius:50%;background:rgba(0,229,255,0.4);margin-top:13px;flex-shrink:0;"></div>
+          <p class="body-sm" style="font-size:22px;">AI-контент для сайта и коммуникаций</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D object: плавающий тор — символ бесконечного цикла AI-процесса -->
+  <canvas id="s3-canvas" style="position:absolute;right:80px;bottom:80px;width:320px;height:320px;pointer-events:none;opacity:0.85;"></canvas>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">03 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 3: AXENAI — СОБСТВЕННЫЙ САЙТ                                -->
+<!-- ================================================================ -->
+<section class="slide" id="s3">
+  <div class="scanlines"></div>
+  <div class="grid-bg" style="opacity:0.4;"></div>
+  <div class="top-bar"></div>
+
+  <div style="position:absolute;top:100px;left:140px;right:140px;bottom:80px;display:grid;grid-template-columns:1fr 480px;gap:60px;align-items:center;">
+    <!-- Left: screenshot -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="browser" style="height:690px;">
+        <div class="browser-bar">
+          <div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div>
+          <div class="browser-url">axenai-two.vercel.app</div>
+        </div>
+        <div style="height:654px;overflow:hidden;">
+          <img src="кейссобственный.jpg" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+        </div>
+      </div>
+      <a href="https://axenai-two.vercel.app/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 0;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.35);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:2px;text-decoration:none;text-transform:uppercase;transition:background 0.2s;">↗ &nbsp;Открыть сайт</a>
+    </div>
+
+    <!-- Right: info -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Проект 01</div>
+      <h2 style="font-size:44px;font-weight:700;line-height:1.1;margin-bottom:24px;">AxenAI<br><span style="color:var(--cyan);text-shadow:0 0 20px rgba(0,229,255,0.4);">Собственный сайт</span></h2>
+      <div class="neon-line" style="width:280px;"></div>
+
+      <div style="margin-bottom:32px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--text-dim);margin-bottom:16px;text-transform:uppercase;">Реализовано</div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Структура под презентацию услуг</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Логика перехода к обращению</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Форма заявки с передачей в обработку</p></div>
+      </div>
+
+      <div class="neon-card">
+        <p class="body-sm" style="font-style:italic;color:var(--text);">Показывает подход к структуре сайта как инструмента для бизнеса</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">04 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 4: ПРОСТРАНСТВО                                              -->
+<!-- ================================================================ -->
+<section class="slide" id="s4">
+  <div class="scanlines"></div>
+  <div class="grid-bg" style="opacity:0.4;"></div>
+  <div class="top-bar"></div>
+
+  <div style="position:absolute;top:100px;left:140px;right:140px;bottom:80px;display:grid;grid-template-columns:480px 1fr;gap:60px;align-items:center;">
+    <!-- Left: info -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Проект 02</div>
+      <h2 style="font-size:52px;font-weight:700;line-height:1.1;margin-bottom:24px;"><span style="color:var(--cyan);text-shadow:0 0 20px rgba(0,229,255,0.4);">Пространство</span></h2>
+      <div class="neon-line" style="width:280px;"></div>
+      <p class="body-sm" style="margin-bottom:32px;">Проект для компании, работающей с бизнесом на маркетплейсах</p>
+
+      <div style="margin-bottom:32px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--text-dim);margin-bottom:16px;text-transform:uppercase;">Реализовано</div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Структура и подача услуг</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Кейсы и оффер компании</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Формы обращений с передачей заявок</p></div>
+      </div>
+
+      <div class="neon-card">
+        <p class="body-sm" style="font-style:italic;color:var(--text);">Понятная цифровая точка входа для новых клиентов</p>
+      </div>
+    </div>
+
+    <!-- Right: screenshot -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="browser" style="height:690px;">
+        <div class="browser-bar">
+          <div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div>
+          <div class="browser-url">prostranstvo11.vercel.app</div>
+        </div>
+        <div style="height:654px;overflow:hidden;background:#04cccb;display:flex;align-items:flex-start;justify-content:center;">
+          <img src="кейспространство.jpg" decoding="async" style="width:100%;height:auto;display:block;">
+        </div>
+      </div>
+      <a href="https://prostranstvo11.vercel.app/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 0;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.35);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:2px;text-decoration:none;text-transform:uppercase;">↗ &nbsp;Открыть сайт</a>
+    </div>
+  </div>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">05 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 5: ПРИМЕРЫ ПО НИШАМ                                         -->
+<!-- ================================================================ -->
+<section class="slide" id="s5">
+  <div class="scanlines"></div>
+  <div class="grid-bg" style="opacity:0.4;"></div>
+  <div class="top-bar"></div>
+
+  <div style="position:absolute;top:90px;left:140px;right:140px;bottom:80px;display:flex;flex-direction:column;">
+    <div style="margin-bottom:32px;display:flex;justify-content:space-between;align-items:flex-end;">
+      <div>
+        <div class="label">Примеры подхода</div>
+        <h2 style="font-size:44px;font-weight:700;">По нишам</h2>
+      </div>
+      <p class="body-sm" style="max-width:600px;text-align:right;">Быстро разобраться в нише и собрать структуру под конкретную бизнес-задачу</p>
+    </div>
+
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;">
+
+      <!-- 1: Свежий климат -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="browser" style="flex:1;overflow:hidden;">
+          <div class="browser-bar" style="height:30px;">
+            <div class="browser-dot r" style="width:8px;height:8px;"></div>
+            <div class="browser-dot y" style="width:8px;height:8px;"></div>
+            <div class="browser-dot g" style="width:8px;height:8px;"></div>
+            <div style="margin-left:8px;font-size:10px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">svezhiyklimat.vercel.app</div>
+          </div>
+          <div style="height:calc(100% - 30px);overflow:hidden;">
+            <img src="slide1.jpg" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+          </div>
+        </div>
+        <a href="https://svezhiyklimat.vercel.app/" target="_blank" style="display:block;padding:8px;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.25);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-decoration:none;text-align:center;text-transform:uppercase;">↗ Открыть сайт</a>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);text-align:center;letter-spacing:1px;">Отделочные работы</div>
+      </div>
+
+      <!-- 2: Barbershop NOIR -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="browser" style="flex:1;overflow:hidden;">
+          <div class="browser-bar" style="height:30px;">
+            <div class="browser-dot r" style="width:8px;height:8px;"></div>
+            <div class="browser-dot y" style="width:8px;height:8px;"></div>
+            <div class="browser-dot g" style="width:8px;height:8px;"></div>
+            <div style="margin-left:8px;font-size:10px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">barbershop-noir.vercel.app</div>
+          </div>
+          <div style="height:calc(100% - 30px);overflow:hidden;">
+            <img src="slide2.jpg" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+          </div>
+        </div>
+        <a href="https://barbershop-noir.vercel.app/" target="_blank" style="display:block;padding:8px;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.25);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-decoration:none;text-align:center;text-transform:uppercase;">↗ Открыть сайт</a>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);text-align:center;letter-spacing:1px;">Барбершоп</div>
+      </div>
+
+      <!-- 3: Lumiere -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="browser" style="flex:1;overflow:hidden;">
+          <div class="browser-bar" style="height:30px;">
+            <div class="browser-dot r" style="width:8px;height:8px;"></div>
+            <div class="browser-dot y" style="width:8px;height:8px;"></div>
+            <div class="browser-dot g" style="width:8px;height:8px;"></div>
+            <div style="margin-left:8px;font-size:10px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">lumiere-tawny.vercel.app</div>
+          </div>
+          <div style="height:calc(100% - 30px);overflow:hidden;">
+            <img src="slide3.jpg" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+          </div>
+        </div>
+        <a href="https://lumiere-tawny.vercel.app/" target="_blank" style="display:block;padding:8px;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.25);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-decoration:none;text-align:center;text-transform:uppercase;">↗ Открыть сайт</a>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);text-align:center;letter-spacing:1px;">Бьюти-студия</div>
+      </div>
+
+      <!-- 4: CleanPro -->
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="browser" style="flex:1;overflow:hidden;">
+          <div class="browser-bar" style="height:30px;">
+            <div class="browser-dot r" style="width:8px;height:8px;"></div>
+            <div class="browser-dot y" style="width:8px;height:8px;"></div>
+            <div class="browser-dot g" style="width:8px;height:8px;"></div>
+            <div style="margin-left:8px;font-size:10px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;">cleaning-landing-pi.vercel.app</div>
+          </div>
+          <div style="height:calc(100% - 30px);overflow:hidden;">
+            <img src="slide4.jpg" decoding="async" style="width:100%;height:100%;object-fit:cover;object-position:top;">
+          </div>
+        </div>
+        <a href="https://cleaning-landing-pi.vercel.app/" target="_blank" style="display:block;padding:8px;background:rgba(0,229,255,0.07);border:1px solid rgba(0,229,255,0.25);color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-decoration:none;text-align:center;text-transform:uppercase;">↗ Открыть сайт</a>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);text-align:center;letter-spacing:1px;">Клининг</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">06 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 6: ЧЕМ ОТЛИЧАЮСЬ                                            -->
+<!-- ================================================================ -->
+<section class="slide" id="s6">
+  <div class="scanlines"></div>
+  <div class="grid-bg" style="opacity:0.5;"></div>
+  <div class="top-bar"></div>
+
+  <div style="position:absolute;width:800px;height:800px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,102,255,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="position:absolute;top:100px;left:140px;right:140px;bottom:80px;display:grid;grid-template-columns:400px 1fr;gap:80px;align-items:stretch;">
+    <!-- Left -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Отличие</div>
+      <h2 class="section" style="margin-bottom:24px;">Чем<br>отличаюсь</h2>
+      <div class="neon-line" style="width:240px;"></div>
+    </div>
+
+    <!-- Right: 4 cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;grid-template-rows:1fr 1fr;">
+
+      <div class="neon-card" style="padding:48px;border-color:rgba(0,229,255,0.4);display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:2px;color:var(--cyan);margin-bottom:20px;">01</div>
+        <h3 style="font-size:30px;font-weight:600;margin-bottom:16px;">Скорость</h3>
+        <p class="body-sm">Сайт под ключ за 7–14 дней</p>
+      </div>
+
+      <div class="neon-card" style="padding:48px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:2px;color:var(--text-dim);margin-bottom:20px;">02</div>
+        <h3 style="font-size:30px;font-weight:600;margin-bottom:16px;">Фокус на задаче</h3>
+        <p class="body-sm">Думаю тем, как сайт работает на бизнес</p>
+      </div>
+
+      <div class="neon-card" style="padding:48px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:2px;color:var(--text-dim);margin-bottom:20px;">03</div>
+        <h3 style="font-size:30px;font-weight:600;margin-bottom:16px;">AI как инструмент</h3>
+        <p class="body-sm">Ускорение структуры, контента и автоматизации</p>
+      </div>
+
+      <div class="neon-card" style="padding:48px;border-color:rgba(0,229,255,0.4);display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:2px;color:var(--cyan);margin-bottom:20px;">04</div>
+        <h3 style="font-size:30px;font-weight:600;margin-bottom:16px;">Гибкость</h3>
+        <p class="body-sm">Усиливаю решение интеграциями по мере роста задачи</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">07 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 7: КУДА РАЗВИВАЕТСЯ AXENAI                                  -->
+<!-- ================================================================ -->
+<section class="slide" id="s7">
+  <div class="scanlines"></div>
+  <div class="grid-bg" style="opacity:0.4;"></div>
+  <div class="top-bar"></div>
+
+  <div style="position:absolute;width:900px;height:900px;top:50%;right:-200px;transform:translateY(-50%);background:radial-gradient(circle,rgba(0,229,255,0.07) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;">
+    <!-- Left -->
+    <div style="padding:120px 80px 80px 140px;display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Развитие</div>
+      <h2 class="section" style="margin-bottom:24px;">Куда движется<br><span style="color:var(--cyan);text-shadow:0 0 24px rgba(0,229,255,0.5);">AxenAI</span></h2>
+      <div class="neon-line" style="width:320px;"></div>
+      <p class="body" style="margin-bottom:40px;">Следующий этап — комплексные цифровые решения для бизнеса</p>
+      <div class="neon-card">
+        <p class="body-sm" style="font-style:italic;color:var(--text);">Цель — собирать для бизнеса не отдельные элементы, а связные системы под конкретную задачу</p>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div style="padding:120px 140px 80px 80px;display:flex;flex-direction:column;justify-content:center;border-left:1px solid var(--border-c);background:var(--bg2);">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--text-dim);margin-bottom:48px;text-transform:uppercase;">// В фокусе</div>
+
+      <div style="display:flex;flex-direction:column;">
+        <div style="padding:32px 0;border-bottom:1px solid var(--border-c);display:flex;align-items:center;gap:32px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:700;color:var(--cyan);opacity:0.25;min-width:70px;text-shadow:0 0 20px var(--cyan);">01</div>
+          <div>
+            <h3 style="font-size:28px;font-weight:600;margin-bottom:8px;">AI-агенты</h3>
+            <p class="body-sm">Автономные системы для бизнес-задач</p>
+          </div>
+        </div>
+        <div style="padding:32px 0;border-bottom:1px solid var(--border-c);display:flex;align-items:center;gap:32px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:700;color:var(--cyan);opacity:0.25;min-width:70px;text-shadow:0 0 20px var(--cyan);">02</div>
+          <div>
+            <h3 style="font-size:28px;font-weight:600;margin-bottom:8px;">Автоматизация процессов</h3>
+            <p class="body-sm">Операционные и маркетинговые интеграции</p>
+          </div>
+        </div>
+        <div style="padding:32px 0;display:flex;align-items:center;gap:32px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:700;color:var(--cyan);opacity:0.25;min-width:70px;text-shadow:0 0 20px var(--cyan);">03</div>
+          <div>
+            <h3 style="font-size:28px;font-weight:600;margin-bottom:8px;">Связные системы</h3>
+            <p class="body-sm">Не отдельные инструменты — комплексное решение</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">08 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 8: КОНТАКТЫ                                                  -->
+<!-- ================================================================ -->
+<section class="slide" id="s8">
+  <div class="scanlines"></div>
+  <div class="grid-bg" style="opacity:0.4;"></div>
+  <div class="top-bar"></div>
+
+  <div style="position:absolute;width:1000px;height:1000px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,102,255,0.1) 0%,transparent 60%);pointer-events:none;"></div>
+
+  <div style="position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;">
+    <!-- Left -->
+    <div style="padding:0 80px 0 140px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="width:90px;height:90px;border:1px solid var(--border-c);border-radius:4px;overflow:hidden;box-shadow:0 0 24px rgba(0,229,255,0.15);margin-bottom:36px;">
+        <img src="axenai_logo.jpg" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="label">Связаться</div>
+      <h2 style="font-size:64px;font-weight:800;line-height:0.95;letter-spacing:-2px;margin-bottom:12px;">Артём<br><span style="color:var(--cyan);text-shadow:0 0 30px rgba(0,229,255,0.5);">Патага</span></h2>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:36px;">Основатель AxenAI</p>
+      <div class="neon-line" style="width:320px;"></div>
+      <p class="body">Открыт к новым проектам<br>и партнёрству</p>
+    </div>
+
+    <!-- Right -->
+    <div style="padding:0 140px 0 80px;display:flex;flex-direction:column;justify-content:center;gap:20px;background:var(--bg2);border-left:1px solid var(--border-c);">
+
+      <div style="padding:28px 32px;background:var(--bg3);border:1px solid var(--border-c);border-left:3px solid var(--cyan);display:flex;align-items:center;gap:24px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--text-dim);min-width:110px;text-transform:uppercase;">Телефон</div>
+        <div style="width:1px;height:28px;background:var(--border-c);"></div>
+        <a href="tel:+79236791581" style="font-size:24px;color:var(--text);text-decoration:none;">+7 923 679 15 81</a>
+      </div>
+
+      <div style="padding:28px 32px;background:var(--bg3);border:1px solid var(--border-c);border-left:3px solid rgba(0,229,255,0.4);display:flex;align-items:center;gap:24px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--text-dim);min-width:110px;text-transform:uppercase;">Telegram</div>
+        <div style="width:1px;height:28px;background:var(--border-c);"></div>
+        <a href="https://t.me/artem_pataga" target="_blank" style="font-size:24px;color:var(--text);text-decoration:none;">@artem_pataga</a>
+      </div>
+
+      <div style="padding:28px 32px;background:var(--bg3);border:1px solid var(--border-c);border-left:3px solid rgba(0,229,255,0.2);display:flex;align-items:center;gap:24px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--text-dim);min-width:110px;text-transform:uppercase;">Сайт</div>
+        <div style="width:1px;height:28px;background:var(--border-c);"></div>
+        <a href="https://axenai-two.vercel.app/" target="_blank" style="font-size:24px;color:var(--cyan);text-shadow:0 0 12px rgba(0,229,255,0.4);text-decoration:none;">axenai-two.vercel.app</a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="bracket tl"></div>
+  <div class="bracket br"></div>
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">09 / 09</div>
+</section>
+
+
+<script>
+/* ---- SCALER: дебаунс resize ---- */
+(function () {
+  function scaleSlides() {
+    var vw = document.documentElement.clientWidth || window.innerWidth;
+    var s  = vw / 1920;
+    document.querySelectorAll('section.slide').forEach(function (slide) {
+      var p = slide.parentElement;
+      if (!p.classList.contains('slide-outer')) {
+        var wrap = document.createElement('div');
+        wrap.className = 'slide-outer';
+        slide.parentNode.insertBefore(wrap, slide);
+        wrap.appendChild(slide);
+        p = wrap;
+      }
+      p.style.width  = vw + 'px';
+      p.style.height = Math.round(s * 1080) + 'px';
+      slide.style.transformOrigin = 'top left';
+      slide.style.transform       = 'scale(' + s + ')';
+    });
+    document.body.style.width = vw + 'px';
+  }
+
+  var timer;
+  function onResize() {
+    clearTimeout(timer);
+    timer = setTimeout(scaleSlides, 150);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scaleSlides);
+  } else {
+    scaleSlides();
+  }
+  window.addEventListener('resize', onResize, { passive: true });
+})();
+</script>
+
+<script>
+/* ---- 3D TORUS: пауза когда слайд вне экрана ---- */
+(function () {
+  function init() {
+    var canvas = document.getElementById('s3-canvas');
+    if (!canvas || typeof THREE === 'undefined') return;
+
+    var W = 320, H = 320;
+    canvas.width  = W * 2;
+    canvas.height = H * 2;
+
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(W, H);
+    renderer.setClearColor(0x000000, 0);
+
+    var scene  = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(0, 0, 4.5);
+
+    /* Уменьшенные сегменты: 32/64 вместо 64/128 — вдвое меньше вершин */
+    var geo   = new THREE.TorusGeometry(1.1, 0.38, 32, 64);
+    var mat   = new THREE.MeshStandardMaterial({ color: 0x00e5ff, emissive: 0x004466, metalness: 0.3, roughness: 0.25 });
+    var torus = new THREE.Mesh(geo, mat);
+    scene.add(torus);
+
+    var wmat   = new THREE.MeshBasicMaterial({ color: 0x00e5ff, wireframe: true, opacity: 0.12, transparent: true });
+    var wframe = new THREE.Mesh(geo, wmat);
+    scene.add(wframe);
+
+    scene.add(new THREE.AmbientLight(0x002233, 2));
+    var dl = new THREE.DirectionalLight(0x00e5ff, 3);
+    dl.position.set(3, 3, 5);
+    scene.add(dl);
+    var dl2 = new THREE.DirectionalLight(0x0066ff, 1.5);
+    dl2.position.set(-3, -2, 2);
+    scene.add(dl2);
+
+    var t = 0, rafId = null, visible = false;
+
+    function animate() {
+      rafId = requestAnimationFrame(animate);
+      t += 0.012;
+      torus.rotation.x = t * 0.6;
+      torus.rotation.y = t;
+      wframe.rotation.copy(torus.rotation);
+      torus.position.y  = Math.sin(t * 0.7) * 0.08;
+      wframe.position.y = torus.position.y;
+      renderer.render(scene, camera);
+    }
+
+    /* Запускаем/останавливаем анимацию через IntersectionObserver */
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !rafId) {
+            animate();
+          } else if (!e.isIntersecting && rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+        });
+      }, { threshold: 0.1 });
+      io.observe(canvas);
+    } else {
+      animate(); // fallback
+    }
+  }
+
+  /* Three.js грузится с defer — ждём load */
+  if (document.readyState === 'complete') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+})();
+</script>
+</body>
+</html>

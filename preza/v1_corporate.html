@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>AxenAI — Артём Патага</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0c0e;
+    --bg2: #111318;
+    --bg3: #161a20;
+    --line: rgba(255,255,255,0.08);
+    --line2: rgba(255,255,255,0.14);
+    --accent: #00c2ff;
+    --accent-dim: rgba(0,194,255,0.15);
+    --text: #f0f2f5;
+    --text-dim: #7a8a9a;
+    --text-muted: #3a4550;
+    --white: #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); font-family:'Inter',sans-serif; color:var(--text); }
+
+  .slide {
+    width:1920px; height:1080px;
+    position:relative; overflow:hidden;
+    background:var(--bg);
+    page-break-after:always; page-break-inside:avoid;
+  }
+
+  /* ---- LOGO CORNER ---- */
+  .logo-corner {
+    position:absolute; top:36px; right:52px;
+    display:flex; align-items:center; gap:12px; z-index:20;
+  }
+  .logo-corner img { width:36px; height:36px; object-fit:cover; border-radius:4px; }
+  .logo-corner span {
+    font-size:15px; font-weight:600; letter-spacing:1px;
+    color:var(--text-dim); text-transform:uppercase;
+  }
+
+  /* ---- SLIDE NUMBER ---- */
+  .slide-num {
+    position:absolute; bottom:40px; right:52px;
+    font-size:13px; color:var(--text-muted); letter-spacing:2px;
+    font-weight:400;
+  }
+
+  /* ---- TOP LINE ---- */
+  .top-line {
+    position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg, var(--accent) 0%, transparent 60%);
+  }
+
+  /* ---- LABEL ---- */
+  .label {
+    font-size:12px; font-weight:500; letter-spacing:3px;
+    text-transform:uppercase; color:var(--accent);
+    margin-bottom:20px;
+  }
+
+  /* ---- DIVIDER ---- */
+  .divider {
+    width:60px; height:2px; background:var(--accent);
+    margin:28px 0;
+  }
+  .divider-long {
+    height:1px; background:var(--line2);
+    margin:32px 0;
+  }
+
+  /* ---- BROWSER MOCKUP ---- */
+  .browser {
+    background:#0d1117;
+    border:1px solid var(--line2);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .browser-bar {
+    height:40px; background:#161b22;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; padding:0 16px; gap:8px;
+  }
+  .browser-dot { width:11px; height:11px; border-radius:50%; }
+  .browser-dot.r { background:#ff5f57; }
+  .browser-dot.y { background:#febc2e; }
+  .browser-dot.g { background:#28c840; }
+  .browser-url {
+    margin-left:12px; flex:1;
+    background:#0d1117; border:1px solid var(--line2);
+    border-radius:4px; height:24px;
+    display:flex; align-items:center; padding:0 10px;
+    font-size:12px; color:var(--text-muted);
+  }
+
+  /* ---- CARD ---- */
+  .card {
+    background:var(--bg2);
+    border:1px solid var(--line);
+    padding:32px 36px;
+  }
+  .card-accent {
+    border-left:3px solid var(--accent);
+  }
+
+  /* ---- TAG ---- */
+  .tag {
+    display:inline-block; padding:5px 14px;
+    border:1px solid var(--line2);
+    font-size:13px; color:var(--text-dim);
+    letter-spacing:0.5px; margin:4px;
+  }
+
+  /* ---- CHECK ITEM ---- */
+  .check-item {
+    display:flex; align-items:flex-start; gap:16px;
+    margin-bottom:24px;
+  }
+  .check-dot {
+    width:6px; height:6px; border-radius:50%;
+    background:var(--accent); margin-top:9px; flex-shrink:0;
+  }
+
+  /* ---- TYPOGRAPHY ---- */
+  h1.hero { font-size:88px; font-weight:800; line-height:1; letter-spacing:-2px; color:var(--white); }
+  h2.section { font-size:56px; font-weight:700; line-height:1.1; letter-spacing:-1px; }
+  h3.card-title { font-size:28px; font-weight:600; }
+  p.body { font-size:21px; font-weight:300; line-height:1.7; color:var(--text-dim); }
+  p.body-sm { font-size:18px; font-weight:300; line-height:1.7; color:var(--text-dim); }
+
+  /* ---- PRINT ---- */
+  @page { size:1920px 1080px; margin:0; }
+  @media print {
+    .slide { page-break-after:always; page-break-inside:avoid; }
+    * { animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================================================================ -->
+<!-- SLIDE 1: КТО Я                                                    -->
+<!-- ================================================================ -->
+<section class="slide" id="s1">
+  <div class="top-line"></div>
+
+  <!-- Left content -->
+  <div style="position:absolute;left:120px;top:0;bottom:0;width:820px;display:flex;flex-direction:column;justify-content:center;">
+    <div class="label">Основатель AxenAI</div>
+    <h1 class="hero">Артём<br><span style="color:var(--accent);">Патага</span></h1>
+    <div class="divider"></div>
+    <p class="body" style="max-width:620px;margin-bottom:48px;">
+      Разработка сайтов и AI-решений<br>для бизнеса
+    </p>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <span class="tag">Омск</span>
+      <span class="tag">2026</span>
+      <span class="tag">Web + AI</span>
+    </div>
+  </div>
+
+  <!-- Right decorative panel -->
+  <div style="position:absolute;right:0;top:0;bottom:0;width:680px;background:var(--bg2);border-left:1px solid var(--line);">
+    <!-- Grid lines -->
+    <div style="position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;"></div>
+    <!-- Center logo -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+      <img src="axenai_logo.jpg" style="width:220px;height:220px;object-fit:cover;border-radius:8px;opacity:0.9;">
+      <div style="margin-top:28px;font-size:22px;font-weight:600;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;">AxenAI</div>
+    </div>
+    <!-- Corner accent -->
+    <div style="position:absolute;bottom:0;right:0;width:3px;height:120px;background:var(--accent);"></div>
+    <div style="position:absolute;bottom:0;right:0;width:120px;height:3px;background:var(--accent);"></div>
+  </div>
+
+  <div class="logo-corner">
+    <img src="axenai_logo.jpg" alt="AxenAI">
+    <span>AxenAI</span>
+  </div>
+  <div class="slide-num">01 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 2: КЛЮЧЕВАЯ МЫСЛЬ                                           -->
+<!-- ================================================================ -->
+<section class="slide" id="s2">
+  <div class="top-line"></div>
+
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;">
+    <div style="max-width:1480px;padding:0 120px;">
+      <p style="font-size:13px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--text-muted);margin-bottom:56px;">Позиция</p>
+      <h2 style="font-size:80px;font-weight:800;line-height:1.18;letter-spacing:-2px;color:var(--white);">
+        Делаю то же что студии —<br>
+        <span style="color:var(--accent);">быстрее в 5 раз</span> и дешевле в разы.<br>
+        За счёт AI в основе процесса.
+      </h2>
+    </div>
+  </div>
+
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">02 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 3: ЧТО ДЕЛАЮ                                                -->
+<!-- ================================================================ -->
+<section class="slide" id="s3">
+  <div class="top-line"></div>
+
+  <div style="position:absolute;top:100px;left:120px;right:120px;bottom:80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;">
+    <!-- Left -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Услуги</div>
+      <h2 class="section">Что<br>делаю</h2>
+      <div class="divider"></div>
+      <p class="body">
+        Разрабатываю сайты под ключ с фокусом на бизнес-задачу клиента.
+      </p>
+      <div style="margin-top:36px;display:flex;flex-direction:column;gap:12px;">
+        <div class="check-item">
+          <div class="check-dot" style="background:var(--accent);"></div>
+          <p class="body-sm" style="color:var(--white);font-weight:600;">Срок: 7–14 дней</p>
+        </div>
+        <div class="check-item">
+          <div class="check-dot"></div>
+          <p class="body-sm">Без долгих согласований и лишних итераций</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div style="display:flex;flex-direction:column;justify-content:space-between;">
+      <!-- In the service -->
+      <div>
+        <p style="font-size:13px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px;">В РАБОТУ ВХОДИТ</p>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Структура и дизайн сайта</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Формы обращений и передача заявок</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Базовая SEO-структура</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Аналитика</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Техническая подготовка к запуску</p></div>
+      </div>
+
+      <div style="height:1px;background:var(--line);margin:20px 0;"></div>
+
+      <!-- Additionally -->
+      <div>
+        <p style="font-size:13px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px;">ДОПОЛНИТЕЛЬНО</p>
+        <div class="check-item">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(0,194,255,0.4);margin-top:9px;flex-shrink:0;"></div>
+          <p class="body-sm">Интеграции и автоматизация обработки заявок</p>
+        </div>
+        <div class="check-item">
+          <div style="width:6px;height:6px;border-radius:50%;background:rgba(0,194,255,0.4);margin-top:9px;flex-shrink:0;"></div>
+          <p class="body-sm">AI-контент для сайта и коммуникаций</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">03 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 3: AXENAI — СОБСТВЕННЫЙ САЙТ                                -->
+<!-- ================================================================ -->
+<section class="slide" id="s3">
+  <div class="top-line"></div>
+
+  <div style="position:absolute;top:100px;left:120px;right:120px;bottom:80px;display:grid;grid-template-columns:1fr 520px;gap:60px;align-items:center;">
+    <!-- Left: mockup -->
+    <div class="browser" style="height:760px;">
+      <div class="browser-bar">
+        <div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div>
+        <div class="browser-url">axenai.ru</div>
+      </div>
+      <!-- Mock website content -->
+      <div style="padding:0;height:720px;background:#000;position:relative;overflow:hidden;">
+        <!-- Hero -->
+        <div style="padding:40px 48px 36px;border-bottom:1px solid #1a2030;">
+          <div style="font-size:11px;letter-spacing:3px;color:#00e5ff;margin-bottom:16px;text-transform:uppercase;">AxenAI — Цифровые решения</div>
+          <div style="font-size:42px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:16px;">Сайты и AI-решения<br>для бизнеса</div>
+          <div style="font-size:16px;color:#4a6a8a;margin-bottom:28px;max-width:480px;">Разработка под ключ с фокусом на конверсию и автоматизацию</div>
+          <div style="display:flex;gap:12px;">
+            <div style="padding:10px 28px;background:#00e5ff;color:#000;font-weight:600;font-size:14px;display:inline-block;">Заказать сайт</div>
+            <div style="padding:10px 28px;border:1px solid #00e5ff;color:#00e5ff;font-size:14px;display:inline-block;">Узнать подробнее</div>
+          </div>
+        </div>
+        <!-- Services grid -->
+        <div style="padding:28px 48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+          <div style="padding:20px;background:#080f1a;border:1px solid #0d1f3a;border-top:2px solid #00e5ff;">
+            <div style="font-size:13px;color:#00e5ff;margin-bottom:8px;letter-spacing:1px;">САЙТЫ</div>
+            <div style="font-size:15px;color:#e2e8f0;font-weight:500;">Лендинги и корпоративные сайты под ключ</div>
+          </div>
+          <div style="padding:20px;background:#080f1a;border:1px solid #0d1f3a;border-top:2px solid #0066ff;">
+            <div style="font-size:13px;color:#0066ff;margin-bottom:8px;letter-spacing:1px;">АВТОМАТИЗАЦИЯ</div>
+            <div style="font-size:15px;color:#e2e8f0;font-weight:500;">Интеграции и обработка заявок</div>
+          </div>
+          <div style="padding:20px;background:#080f1a;border:1px solid #0d1f3a;border-top:2px solid #7c3aed;">
+            <div style="font-size:13px;color:#a78bfa;margin-bottom:8px;letter-spacing:1px;">AI-КОНТЕНТ</div>
+            <div style="font-size:15px;color:#e2e8f0;font-weight:500;">Тексты и коммуникации с AI</div>
+          </div>
+        </div>
+        <!-- Form section -->
+        <div style="padding:0 48px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div style="padding:20px;background:#080f1a;border:1px solid #0d1f3a;">
+            <div style="font-size:13px;color:#4a6a8a;margin-bottom:12px;">Имя</div>
+            <div style="height:1px;background:#0d1f3a;margin-bottom:12px;"></div>
+            <div style="font-size:13px;color:#4a6a8a;margin-bottom:12px;">Email или Telegram</div>
+            <div style="height:1px;background:#0d1f3a;"></div>
+          </div>
+          <div style="padding:20px;background:#080f1a;border:1px solid #0d1f3a;">
+            <div style="font-size:13px;color:#4a6a8a;margin-bottom:12px;">Расскажите о задаче</div>
+            <div style="height:60px;background:#050a12;border:1px solid #0d1f3a;"></div>
+            <div style="margin-top:12px;padding:10px 20px;background:#00e5ff;color:#000;font-weight:600;font-size:13px;text-align:center;">Отправить</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: info -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Проект 01</div>
+      <h2 style="font-size:42px;font-weight:700;line-height:1.1;margin-bottom:24px;">AxenAI<br>Собственный сайт</h2>
+      <div class="divider"></div>
+
+      <div style="margin-bottom:32px;">
+        <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;">Реализовано</p>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Структура под презентацию услуг и направлений</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Логика перехода к обращению</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Форма заявки с передачей в обработку</p></div>
+      </div>
+
+      <div style="padding:20px 24px;background:var(--bg2);border-left:3px solid var(--accent);">
+        <p class="body-sm" style="font-style:italic;">Показывает подход к структуре сайта как инструмента для бизнеса</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">04 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 4: ПРОЕКТ — ПРОСТРАНСТВО                                     -->
+<!-- ================================================================ -->
+<section class="slide" id="s4">
+  <div class="top-line"></div>
+
+  <div style="position:absolute;top:100px;left:120px;right:120px;bottom:80px;display:grid;grid-template-columns:520px 1fr;gap:60px;align-items:center;">
+    <!-- Left: info -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Проект 02</div>
+      <h2 style="font-size:48px;font-weight:700;line-height:1.1;margin-bottom:24px;">Пространство</h2>
+      <div class="divider"></div>
+      <p class="body-sm" style="margin-bottom:32px;">Проект для компании, работающей с бизнесом на маркетплейсах</p>
+
+      <div style="margin-bottom:32px;">
+        <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;">Реализовано</p>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Структура и подача услуг</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Кейсы и оффер компании</p></div>
+        <div class="check-item"><div class="check-dot"></div><p class="body-sm">Формы обращений с передачей заявок</p></div>
+      </div>
+
+      <div style="padding:20px 24px;background:var(--bg2);border-left:3px solid var(--accent);">
+        <p class="body-sm" style="font-style:italic;">Понятная цифровая точка входа для новых клиентов</p>
+      </div>
+    </div>
+
+    <!-- Right: mockup -->
+    <div class="browser" style="height:760px;">
+      <div class="browser-bar">
+        <div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div>
+        <div class="browser-url">prostranstvo.ru</div>
+      </div>
+      <div style="height:720px;background:#050810;position:relative;overflow:hidden;">
+        <!-- Hero -->
+        <div style="padding:40px 48px 28px;background:linear-gradient(135deg,#050810,#0a1020);border-bottom:1px solid #101828;">
+          <div style="font-size:11px;letter-spacing:3px;color:#3b82f6;margin-bottom:14px;text-transform:uppercase;">Маркетплейсы · Рост · Результат</div>
+          <div style="font-size:38px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:14px;">Выводим бизнес<br>на маркетплейсы</div>
+          <div style="font-size:15px;color:#4a6a8a;margin-bottom:24px;">Сопровождение, аналитика и управление продажами на WB и Ozon</div>
+          <div style="display:inline-block;padding:10px 28px;background:#3b82f6;color:#fff;font-weight:600;font-size:14px;">Получить консультацию</div>
+        </div>
+        <!-- Cases -->
+        <div style="padding:24px 48px;">
+          <div style="font-size:13px;letter-spacing:2px;color:#4a6a8a;margin-bottom:16px;text-transform:uppercase;">Кейсы</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div style="padding:18px;background:#080f1a;border:1px solid #101828;">
+              <div style="font-size:28px;font-weight:700;color:#3b82f6;margin-bottom:6px;">×3.2</div>
+              <div style="font-size:13px;color:#e2e8f0;">Рост выручки за 6 месяцев</div>
+            </div>
+            <div style="padding:18px;background:#080f1a;border:1px solid #101828;">
+              <div style="font-size:28px;font-weight:700;color:#3b82f6;margin-bottom:6px;">47</div>
+              <div style="font-size:13px;color:#e2e8f0;">Клиентов выведено в ТОП</div>
+            </div>
+          </div>
+        </div>
+        <!-- Services -->
+        <div style="padding:0 48px;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <div style="padding:8px 18px;border:1px solid #1a2a3a;font-size:13px;color:#4a6a8a;">WB / Ozon</div>
+            <div style="padding:8px 18px;border:1px solid #1a2a3a;font-size:13px;color:#4a6a8a;">Аналитика</div>
+            <div style="padding:8px 18px;border:1px solid #1a2a3a;font-size:13px;color:#4a6a8a;">Реклама</div>
+            <div style="padding:8px 18px;border:1px solid #1a2a3a;font-size:13px;color:#4a6a8a;">Сопровождение</div>
+          </div>
+        </div>
+        <!-- Form -->
+        <div style="padding:20px 48px 0;">
+          <div style="padding:20px;background:#080f1a;border:1px solid #101828;display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;">
+            <div>
+              <div style="font-size:11px;color:#4a6a8a;margin-bottom:6px;">Имя</div>
+              <div style="height:32px;background:#050a12;border:1px solid #101828;"></div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:#4a6a8a;margin-bottom:6px;">Телефон</div>
+              <div style="height:32px;background:#050a12;border:1px solid #101828;"></div>
+            </div>
+            <div style="padding:8px 20px;background:#3b82f6;color:#fff;font-size:13px;font-weight:600;">Отправить</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">05 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 5: ПРИМЕРЫ ПО НИШАМ                                         -->
+<!-- ================================================================ -->
+<section class="slide" id="s5">
+  <div class="top-line"></div>
+
+  <div style="position:absolute;top:90px;left:120px;right:120px;bottom:80px;display:flex;flex-direction:column;">
+    <div style="margin-bottom:40px;">
+      <div class="label">Примеры подхода</div>
+      <h2 style="font-size:44px;font-weight:700;">По нишам</h2>
+    </div>
+
+    <!-- 4 mini browsers grid -->
+    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:24px;">
+
+      <!-- Строительство -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="browser" style="flex:1;min-height:0;">
+          <div class="browser-bar" style="height:32px;">
+            <div class="browser-dot r" style="width:9px;height:9px;"></div>
+            <div class="browser-dot y" style="width:9px;height:9px;"></div>
+            <div class="browser-dot g" style="width:9px;height:9px;"></div>
+            <div style="margin-left:10px;font-size:11px;color:var(--text-muted);">stroy-omsk.ru</div>
+          </div>
+          <div style="height:calc(100% - 32px);background:#0a0c08;padding:18px;overflow:hidden;">
+            <div style="font-size:9px;letter-spacing:2px;color:#e8a84a;margin-bottom:8px;text-transform:uppercase;">Строительство</div>
+            <div style="font-size:20px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px;">Строим дома<br>под ключ</div>
+            <div style="font-size:12px;color:#6a7a5a;margin-bottom:14px;">Более 150 объектов в Омске</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
+              <div style="padding:8px;background:#111408;border:1px solid #1a2010;">
+                <div style="font-size:16px;font-weight:700;color:#e8a84a;">150+</div>
+                <div style="font-size:10px;color:#4a5a3a;">объектов</div>
+              </div>
+              <div style="padding:8px;background:#111408;border:1px solid #1a2010;">
+                <div style="font-size:16px;font-weight:700;color:#e8a84a;">12 лет</div>
+                <div style="font-size:10px;color:#4a5a3a;">на рынке</div>
+              </div>
+            </div>
+            <div style="padding:7px 14px;background:#e8a84a;color:#000;font-size:11px;font-weight:600;text-align:center;">Получить расчёт</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:500;color:var(--text-dim);text-align:center;">Строительные услуги</div>
+      </div>
+
+      <!-- Локальные сервисы -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="browser" style="flex:1;min-height:0;">
+          <div class="browser-bar" style="height:32px;">
+            <div class="browser-dot r" style="width:9px;height:9px;"></div>
+            <div class="browser-dot y" style="width:9px;height:9px;"></div>
+            <div class="browser-dot g" style="width:9px;height:9px;"></div>
+            <div style="margin-left:10px;font-size:11px;color:var(--text-muted);">master-remont.ru</div>
+          </div>
+          <div style="height:calc(100% - 32px);background:#080a0c;padding:18px;overflow:hidden;">
+            <div style="font-size:9px;letter-spacing:2px;color:#38bdf8;margin-bottom:8px;text-transform:uppercase;">Сервис</div>
+            <div style="font-size:20px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px;">Ремонт<br>под ключ</div>
+            <div style="font-size:12px;color:#4a6a8a;margin-bottom:14px;">Выезд в день обращения</div>
+            <div style="margin-bottom:12px;">
+              <div style="padding:7px 12px;background:#0a1520;border:1px solid #0d2030;margin-bottom:6px;">
+                <div style="font-size:11px;color:#8a9aaa;">Телефон</div>
+                <div style="height:1px;background:#0d2030;margin-top:4px;"></div>
+              </div>
+              <div style="padding:7px 12px;background:#0a1520;border:1px solid #0d2030;">
+                <div style="font-size:11px;color:#8a9aaa;">Выбрать услугу</div>
+                <div style="height:1px;background:#0d2030;margin-top:4px;"></div>
+              </div>
+            </div>
+            <div style="padding:7px 14px;background:#38bdf8;color:#000;font-size:11px;font-weight:600;text-align:center;">Заказать звонок</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:500;color:var(--text-dim);text-align:center;">Локальные сервисы</div>
+      </div>
+
+      <!-- B2B -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="browser" style="flex:1;min-height:0;">
+          <div class="browser-bar" style="height:32px;">
+            <div class="browser-dot r" style="width:9px;height:9px;"></div>
+            <div class="browser-dot y" style="width:9px;height:9px;"></div>
+            <div class="browser-dot g" style="width:9px;height:9px;"></div>
+            <div style="margin-left:10px;font-size:11px;color:var(--text-muted);">logistic-pro.ru</div>
+          </div>
+          <div style="height:calc(100% - 32px);background:#08080a;padding:18px;overflow:hidden;">
+            <div style="font-size:9px;letter-spacing:2px;color:#a78bfa;margin-bottom:8px;text-transform:uppercase;">B2B</div>
+            <div style="font-size:20px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px;">Логистика<br>для бизнеса</div>
+            <div style="font-size:12px;color:#5a4a8a;margin-bottom:14px;">Надёжные поставки по России</div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;">
+              <div style="padding:8px;background:#0d0a14;border-left:2px solid #a78bfa;">
+                <div style="font-size:11px;color:#c4b5fd;">— Расчёт стоимости онлайн</div>
+              </div>
+              <div style="padding:8px;background:#0d0a14;border-left:2px solid #7c3aed;">
+                <div style="font-size:11px;color:#c4b5fd;">— Отслеживание груза</div>
+              </div>
+              <div style="padding:8px;background:#0d0a14;border-left:2px solid #6d28d9;">
+                <div style="font-size:11px;color:#c4b5fd;">— Личный менеджер</div>
+              </div>
+            </div>
+            <div style="padding:7px 14px;background:#7c3aed;color:#fff;font-size:11px;font-weight:600;text-align:center;">Получить КП</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:500;color:var(--text-dim);text-align:center;">B2B</div>
+      </div>
+
+      <!-- B2C -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="browser" style="flex:1;min-height:0;">
+          <div class="browser-bar" style="height:32px;">
+            <div class="browser-dot r" style="width:9px;height:9px;"></div>
+            <div class="browser-dot y" style="width:9px;height:9px;"></div>
+            <div class="browser-dot g" style="width:9px;height:9px;"></div>
+            <div style="margin-left:10px;font-size:11px;color:var(--text-muted);">beauty-studio.ru</div>
+          </div>
+          <div style="height:calc(100% - 32px);background:#0a0808;padding:18px;overflow:hidden;">
+            <div style="font-size:9px;letter-spacing:2px;color:#f472b6;margin-bottom:8px;text-transform:uppercase;">B2C</div>
+            <div style="font-size:20px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px;">Студия красоты<br>«Aria»</div>
+            <div style="font-size:12px;color:#8a4a6a;margin-bottom:14px;">Запись онлайн 24/7</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;">
+              <div style="padding:8px;background:#140810;border:1px solid #1e0c18;text-align:center;">
+                <div style="font-size:11px;color:#f9a8d4;">Маникюр</div>
+              </div>
+              <div style="padding:8px;background:#140810;border:1px solid #1e0c18;text-align:center;">
+                <div style="font-size:11px;color:#f9a8d4;">Брови</div>
+              </div>
+              <div style="padding:8px;background:#140810;border:1px solid #1e0c18;text-align:center;">
+                <div style="font-size:11px;color:#f9a8d4;">Ресницы</div>
+              </div>
+              <div style="padding:8px;background:#140810;border:1px solid #1e0c18;text-align:center;">
+                <div style="font-size:11px;color:#f9a8d4;">Массаж</div>
+              </div>
+            </div>
+            <div style="padding:7px 14px;background:#f472b6;color:#fff;font-size:11px;font-weight:600;text-align:center;">Записаться</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:500;color:var(--text-dim);text-align:center;">B2C</div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px;padding:16px 24px;background:var(--bg2);border-left:3px solid var(--accent);">
+      <p style="font-size:15px;color:var(--text-dim);">Способность быстро разобраться в нише и собрать структуру под конкретную бизнес-задачу</p>
+    </div>
+  </div>
+
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">06 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 6: ЧЕМ ОТЛИЧАЮСЬ                                            -->
+<!-- ================================================================ -->
+<section class="slide" id="s6">
+  <div class="top-line"></div>
+
+  <div style="position:absolute;top:100px;left:120px;right:120px;bottom:80px;display:grid;grid-template-columns:420px 1fr;gap:80px;align-items:stretch;">
+    <!-- Left -->
+    <div style="display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Отличие</div>
+      <h2 class="section">Чем<br>отличаюсь</h2>
+      <div class="divider"></div>
+    </div>
+
+    <!-- Right: 4 cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;grid-template-rows:1fr 1fr;">
+
+      <div class="card card-accent" style="padding:48px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">01</div>
+        <h3 class="card-title" style="margin-bottom:12px;">Скорость</h3>
+        <p class="body-sm">Сайт под ключ за 7–14 дней</p>
+      </div>
+
+      <div class="card" style="padding:48px;border-top:3px solid rgba(0,194,255,0.3);display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;">02</div>
+        <h3 class="card-title" style="margin-bottom:12px;">Фокус на задаче</h3>
+        <p class="body-sm">Думаю не только дизайном — думаю тем, как сайт работает на бизнес</p>
+      </div>
+
+      <div class="card" style="padding:48px;border-top:3px solid rgba(0,194,255,0.3);display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;">03</div>
+        <h3 class="card-title" style="margin-bottom:12px;">AI как инструмент</h3>
+        <p class="body-sm">Использую AI для ускорения структуры, контента и автоматизации</p>
+      </div>
+
+      <div class="card card-accent" style="padding:48px;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">04</div>
+        <h3 class="card-title" style="margin-bottom:12px;">Гибкость</h3>
+        <p class="body-sm">Готов усиливать решение интеграциями и следующими слоями по мере роста задачи</p>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">07 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 7: КУДА РАЗВИВАЕТСЯ AXENAI                                  -->
+<!-- ================================================================ -->
+<section class="slide" id="s7">
+  <div class="top-line"></div>
+
+  <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr 1fr;">
+    <!-- Left: text -->
+    <div style="padding:120px 80px 80px 120px;display:flex;flex-direction:column;justify-content:center;">
+      <div class="label">Развитие</div>
+      <h2 class="section" style="margin-bottom:24px;">Куда<br>движется<br><span style="color:var(--accent);">AxenAI</span></h2>
+      <div class="divider"></div>
+      <p class="body" style="margin-bottom:40px;">
+        Следующий этап — комплексные цифровые решения для бизнеса
+      </p>
+      <div style="padding:20px 24px;background:var(--bg2);border-left:3px solid var(--accent);">
+        <p class="body-sm" style="font-style:italic;">Цель — собирать для бизнеса не отдельные элементы, а связные системы под конкретную задачу</p>
+      </div>
+    </div>
+
+    <!-- Right: focus items -->
+    <div style="padding:120px 120px 80px 80px;display:flex;flex-direction:column;justify-content:center;background:var(--bg2);border-left:1px solid var(--line);">
+      <p style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:40px;">В ФОКУСЕ</p>
+
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div style="padding:32px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:28px;">
+          <div style="font-size:40px;font-weight:800;color:var(--accent);opacity:0.3;min-width:60px;">01</div>
+          <div>
+            <h3 style="font-size:26px;font-weight:600;margin-bottom:6px;">AI-агенты</h3>
+            <p class="body-sm">Автономные системы для бизнес-задач</p>
+          </div>
+        </div>
+        <div style="padding:32px 0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:28px;">
+          <div style="font-size:40px;font-weight:800;color:var(--accent);opacity:0.3;min-width:60px;">02</div>
+          <div>
+            <h3 style="font-size:26px;font-weight:600;margin-bottom:6px;">Автоматизация процессов</h3>
+            <p class="body-sm">Операционные и маркетинговые интеграции</p>
+          </div>
+        </div>
+        <div style="padding:32px 0;display:flex;align-items:center;gap:28px;">
+          <div style="font-size:40px;font-weight:800;color:var(--accent);opacity:0.3;min-width:60px;">03</div>
+          <div>
+            <h3 style="font-size:26px;font-weight:600;margin-bottom:6px;">Связные системы</h3>
+            <p class="body-sm">Не отдельные инструменты — комплексное решение</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">08 / 09</div>
+</section>
+
+
+<!-- ================================================================ -->
+<!-- SLIDE 8: КОНТАКТЫ                                                  -->
+<!-- ================================================================ -->
+<section class="slide" id="s8">
+  <div class="top-line"></div>
+
+  <!-- Full-height split -->
+  <div style="position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;">
+    <!-- Left -->
+    <div style="padding:0 80px 0 120px;display:flex;flex-direction:column;justify-content:center;">
+      <img src="axenai_logo.jpg" style="width:80px;height:80px;object-fit:cover;border-radius:6px;margin-bottom:36px;">
+      <div class="label">Связаться</div>
+      <h2 class="section" style="margin-bottom:12px;">Артём<br>Патага</h2>
+      <p style="font-size:18px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:40px;">Основатель AxenAI</p>
+      <div class="divider"></div>
+      <p class="body">Открыт к новым проектам<br>и партнёрству</p>
+    </div>
+
+    <!-- Right -->
+    <div style="padding:0 120px 0 80px;display:flex;flex-direction:column;justify-content:center;gap:24px;background:var(--bg2);border-left:1px solid var(--line);">
+
+      <div style="padding:28px 32px;background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--accent);display:flex;align-items:center;gap:24px;">
+        <div style="font-size:13px;letter-spacing:2px;color:var(--text-muted);min-width:100px;text-transform:uppercase;">Телефон</div>
+        <div style="width:1px;height:32px;background:var(--line);"></div>
+        <div style="font-size:22px;color:var(--text);">[вставить]</div>
+      </div>
+
+      <div style="padding:28px 32px;background:var(--bg);border:1px solid var(--line);border-left:3px solid rgba(0,194,255,0.4);display:flex;align-items:center;gap:24px;">
+        <div style="font-size:13px;letter-spacing:2px;color:var(--text-muted);min-width:100px;text-transform:uppercase;">Telegram</div>
+        <div style="width:1px;height:32px;background:var(--line);"></div>
+        <div style="font-size:22px;color:var(--text);">[вставить]</div>
+      </div>
+
+      <div style="padding:28px 32px;background:var(--bg);border:1px solid var(--line);border-left:3px solid rgba(0,194,255,0.2);display:flex;align-items:center;gap:24px;">
+        <div style="font-size:13px;letter-spacing:2px;color:var(--text-muted);min-width:100px;text-transform:uppercase;">Сайт</div>
+        <div style="width:1px;height:32px;background:var(--line);"></div>
+        <div style="font-size:22px;color:var(--accent);">[вставить]</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="logo-corner"><img src="axenai_logo.jpg" alt="AxenAI"><span>AxenAI</span></div>
+  <div class="slide-num">09 / 09</div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>JARVIS Portfolio System — v7.3.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cyan: #00d4ff;
+    --blue: #0066ff;
+    --green: #00ff88;
+    --red: #ff3366;
+    --gold: #ffd700;
+    --bg: #020408;
+    --bg2: #040c14;
+    --surface: rgba(0,212,255,0.04);
+    --surface2: rgba(0,212,255,0.08);
+    --border: rgba(0,212,255,0.2);
+    --border-bright: rgba(0,212,255,0.6);
+    --text: #e0f4ff;
+    --text-dim: #7eb8d4;
+    --text-muted: #3a6b80;
+    --glow: 0 0 20px rgba(0,212,255,0.5);
+    --glow-strong: 0 0 40px rgba(0,212,255,0.8), 0 0 80px rgba(0,212,255,0.3);
+    --font-head: 'Orbitron', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+  }
+
+  /* ===================== SLIDE BASE ===================== */
+  .slide {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+    page-break-after: always;
+    page-break-inside: avoid;
+  }
+
+  /* ===================== BACKGROUND ELEMENTS ===================== */
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .bg-hex {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='115' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon points='50,2 98,28 98,87 50,113 2,87 2,28' fill='none' stroke='rgba(0,212,255,0.06)' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 100px 115px;
+    pointer-events: none;
+  }
+
+  .bg-radial {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+
+  /* ===================== SCAN LINE ===================== */
+  .scanline {
+    position: absolute; inset: 0;
+    background: linear-gradient(transparent 50%, rgba(0,212,255,0.02) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* ===================== CORNER BRACKETS ===================== */
+  .corner { position: absolute; width: 40px; height: 40px; }
+  .corner::before, .corner::after { content: ''; position: absolute; background: var(--cyan); }
+  .corner.tl { top: 0; left: 0; }
+  .corner.tl::before { top: 0; left: 0; width: 100%; height: 3px; }
+  .corner.tl::after  { top: 0; left: 0; width: 3px; height: 100%; }
+  .corner.tr { top: 0; right: 0; }
+  .corner.tr::before { top: 0; right: 0; width: 100%; height: 3px; }
+  .corner.tr::after  { top: 0; right: 0; width: 3px; height: 100%; }
+  .corner.bl { bottom: 0; left: 0; }
+  .corner.bl::before { bottom: 0; left: 0; width: 100%; height: 3px; }
+  .corner.bl::after  { bottom: 0; left: 0; width: 3px; height: 100%; }
+  .corner.br { bottom: 0; right: 0; }
+  .corner.br::before { bottom: 0; right: 0; width: 100%; height: 3px; }
+  .corner.br::after  { bottom: 0; right: 0; width: 3px; height: 100%; }
+
+  /* ===================== HUD CARD ===================== */
+  .hud-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    position: relative;
+    padding: 32px;
+  }
+  .hud-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20px;
+    width: 60px; height: 3px;
+    background: var(--cyan);
+    box-shadow: var(--glow);
+  }
+  .hud-card::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: 20px;
+    width: 60px; height: 3px;
+    background: var(--cyan);
+    box-shadow: var(--glow);
+  }
+
+  /* ===================== TYPOGRAPHY ===================== */
+  .title-xl {
+    font-family: var(--font-head);
+    font-size: 80px;
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--text);
+    text-shadow: 0 0 30px rgba(0,212,255,0.8), 0 0 60px rgba(0,212,255,0.4);
+  }
+  .title-lg {
+    font-family: var(--font-head);
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+  }
+  .title-md {
+    font-family: var(--font-head);
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  .title-sm {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .label {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .body-lg { font-size: 24px; font-weight: 300; line-height: 1.7; color: var(--text-dim); }
+  .body-md { font-size: 20px; font-weight: 400; line-height: 1.6; color: var(--text-dim); }
+
+  /* ===================== GLOW LINE ===================== */
+  .glow-line {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    box-shadow: 0 0 10px var(--cyan);
+    margin: 24px 0;
+  }
+  .glow-line-v {
+    width: 2px;
+    background: linear-gradient(180deg, transparent, var(--cyan), transparent);
+    box-shadow: 0 0 10px var(--cyan);
+  }
+
+  /* ===================== HEADER BAR ===================== */
+  .slide-header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(90deg, rgba(0,212,255,0.1), transparent 40%, transparent 60%, rgba(0,212,255,0.05));
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px;
+    z-index: 10;
+  }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(90deg, rgba(0,212,255,0.08), transparent 50%);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px;
+    z-index: 10;
+  }
+
+  /* ===================== PROGRESS BAR ===================== */
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    box-shadow: 0 0 12px var(--cyan);
+    transition: width 0s;
+  }
+
+  /* ===================== CIRCLE ARC ===================== */
+  .arc-circle {
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    position: absolute;
+    box-shadow: inset 0 0 30px rgba(0,212,255,0.05);
+  }
+  .arc-circle.glow {
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px rgba(0,212,255,0.4), inset 0 0 20px rgba(0,212,255,0.1);
+  }
+
+  /* ===================== ANIMATIONS ===================== */
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(50px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.4; }
+    94% { opacity: 1; }
+    96% { opacity: 0.6; }
+    97% { opacity: 1; }
+  }
+
+  /* ===================== TAG / BADGE ===================== */
+  .tech-tag {
+    display: inline-block;
+    padding: 6px 20px;
+    border: 1px solid var(--border-bright);
+    background: var(--surface2);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    margin: 4px;
+  }
+
+  /* ===================== PRINT / PDF ===================== */
+  @page { size: 1920px 1080px; margin: 0; }
+  @media print {
+    body { margin: 0; }
+    .slide { page-break-after: always; page-break-inside: avoid; }
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: COVER                                                -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-1">
+  <div class="bg-grid"></div>
+  <div class="bg-hex"></div>
+  <div class="scanline"></div>
+
+  <!-- Radial glows -->
+  <div class="bg-radial" style="width:800px;height:800px;top:-200px;right:-100px;background:radial-gradient(circle, rgba(0,102,255,0.15) 0%, transparent 70%);"></div>
+  <div class="bg-radial" style="width:600px;height:600px;bottom:-200px;left:200px;background:radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);"></div>
+
+  <!-- Arc reactor decorative -->
+  <div style="position:absolute;right:320px;top:50%;transform:translateY(-50%);">
+    <div class="arc-circle glow" style="width:420px;height:420px;"></div>
+    <div class="arc-circle" style="width:340px;height:340px;top:40px;left:40px;border-color:rgba(0,212,255,0.3);"></div>
+    <div class="arc-circle" style="width:260px;height:260px;top:80px;left:80px;border-color:rgba(0,102,255,0.4);"></div>
+    <div class="arc-circle" style="width:180px;height:180px;top:120px;left:120px;border-color:rgba(0,212,255,0.5);"></div>
+    <div class="arc-circle glow" style="width:80px;height:80px;top:170px;left:170px;background:rgba(0,212,255,0.2);"></div>
+    <!-- Dashes on outer ring -->
+    <div style="position:absolute;top:0;left:0;width:420px;height:420px;border-radius:50%;border:2px dashed rgba(0,212,255,0.15);"></div>
+  </div>
+
+  <!-- Main content -->
+  <div style="position:absolute;left:120px;top:50%;transform:translateY(-50%);">
+    <div class="label" style="margin-bottom:20px;animation:flicker 8s infinite;">// JARVIS PORTFOLIO SYSTEM v7.3.1</div>
+
+    <div style="display:flex;align-items:center;gap:20px;margin-bottom:16px;">
+      <div style="width:6px;height:90px;background:linear-gradient(180deg,var(--blue),var(--cyan));box-shadow:0 0 20px var(--cyan);"></div>
+      <h1 class="title-xl" style="line-height:1.1;">ALEX<br><span style="color:var(--cyan);">PETROV</span></h1>
+    </div>
+
+    <div class="glow-line" style="width:600px;"></div>
+
+    <p class="title-md" style="color:var(--text-dim);letter-spacing:8px;margin-bottom:40px;">FULL-STACK DEVELOPER</p>
+
+    <p class="body-md" style="max-width:580px;margin-bottom:48px;">
+      Создаю цифровые системы нового поколения.<br>
+      Превращаю сложные задачи в элегантные решения.
+    </p>
+
+    <!-- Status indicators -->
+    <div style="display:flex;gap:32px;">
+      <div>
+        <div class="label" style="font-size:12px;margin-bottom:8px;">СТАТУС</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse-glow 2s infinite;"></div>
+          <span style="font-family:var(--font-mono);color:var(--green);">ONLINE</span>
+        </div>
+      </div>
+      <div>
+        <div class="label" style="font-size:12px;margin-bottom:8px;">ЛОКАЦИЯ</div>
+        <span style="font-family:var(--font-mono);color:var(--text-dim);">МОСКВА, RU</span>
+      </div>
+      <div>
+        <div class="label" style="font-size:12px;margin-bottom:8px;">ОПЫТ</div>
+        <span style="font-family:var(--font-mono);color:var(--text-dim);">5+ ЛЕТ</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">SYSTEM.INIT :: PORTFOLIO.LOAD</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">01 / 10</span>
+  </div>
+
+  <!-- Corners -->
+  <div class="corner tl" style="width:60px;height:60px;top:20px;left:20px;"></div>
+  <div class="corner tr" style="width:60px;height:60px;top:20px;right:20px;"></div>
+  <div class="corner bl" style="width:60px;height:60px;bottom:20px;left:20px;"></div>
+  <div class="corner br" style="width:60px;height:60px;bottom:20px;right:20px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: SYSTEM INIT / ABOUT INTRO                           -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-2">
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:900px;height:900px;top:-300px;left:-200px;background:radial-gradient(circle,rgba(0,212,255,0.08) 0%,transparent 70%);"></div>
+
+  <div class="slide-header">
+    <span class="label">// SYSTEM IDENTIFICATION</span>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse-glow 2s infinite;"></div>
+      <span class="label" style="font-size:12px;color:var(--text-muted);">CONNECTION SECURED</span>
+    </div>
+  </div>
+
+  <!-- Big terminal block left -->
+  <div style="position:absolute;left:100px;top:100px;bottom:70px;width:680px;display:flex;flex-direction:column;gap:24px;">
+    <div style="background:rgba(0,0,0,0.6);border:1px solid var(--border);padding:40px;font-family:var(--font-mono);font-size:17px;line-height:2.4;color:var(--text-dim);">
+      <span style="color:var(--cyan);">&gt;</span> <span style="color:var(--green);">JARVIS</span>: Добро пожаловать, сэр.<br>
+      <span style="color:var(--cyan);">&gt;</span> ЗАГРУЗКА ПРОФИЛЯ... <span style="color:var(--green);">[██████████] 100%</span><br>
+      <span style="color:var(--cyan);">&gt;</span> ID: <span style="color:var(--text);">ALEX_PETROV_001</span><br>
+      <span style="color:var(--cyan);">&gt;</span> РОЛЬ: <span style="color:var(--text);">FULL-STACK DEVELOPER</span><br>
+      <span style="color:var(--cyan);">&gt;</span> ОПЫТ: <span style="color:var(--text);">5+ ЛЕТ</span><br>
+      <span style="color:var(--cyan);">&gt;</span> СПЕЦИАЛИЗАЦИЯ: <span style="color:var(--text);">WEB / AI</span><br>
+      <span style="color:var(--cyan);">&gt;</span> СТАТУС: <span style="color:var(--green);">АКТИВЕН</span><br>
+      <span style="color:var(--cyan);">&gt;</span> <span style="color:var(--text-muted);">_</span>
+    </div>
+
+    <!-- System status panel -->
+    <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border);padding:32px;flex:1;display:flex;flex-direction:column;justify-content:space-around;">
+      <div class="label" style="font-size:12px;margin-bottom:20px;color:var(--text-muted);">// SYSTEM STATUS</div>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--text-muted);">PERFORMANCE</span>
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--green);">98%</span>
+          </div>
+          <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:98%;background:linear-gradient(90deg,var(--green),#00aa55);box-shadow:0 0 8px var(--green);"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--text-muted);">CODE QUALITY</span>
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--cyan);">95%</span>
+          </div>
+          <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:95%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--text-muted);">RELIABILITY</span>
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--cyan);">99.9%</span>
+          </div>
+          <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:99.9%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--text-muted);">CLIENT SATISFACTION</span>
+            <span style="font-family:var(--font-mono);font-size:14px;color:var(--gold);">4.9/5</span>
+          </div>
+          <div class="progress-bar" style="height:6px;"><div class="progress-fill" style="width:98%;background:linear-gradient(90deg,#ff8800,var(--gold));box-shadow:0 0 8px var(--gold);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About text right -->
+  <div style="position:absolute;right:100px;top:100px;bottom:70px;width:960px;display:flex;flex-direction:column;justify-content:space-between;">
+    <div>
+      <div class="label" style="margin-bottom:20px;">// О РАЗРАБОТЧИКЕ</div>
+      <h2 class="title-lg" style="margin-bottom:24px;">ОБО МНЕ</h2>
+      <div class="glow-line" style="width:400px;margin-bottom:36px;"></div>
+
+      <p class="body-lg" style="margin-bottom:28px;">
+        Разрабатываю высоконагруженные веб-приложения и сервисы с глубокой экспертизой
+        в современных технологиях. Специализируюсь на создании эффективных архитектурных
+        решений и чистого, поддерживаемого кода.
+      </p>
+
+      <p class="body-md" style="margin-bottom:0;">
+        Мой подход — это сочетание технической точности и творческого мышления.
+        Каждый проект рассматриваю как возможность создать нечто исключительное.
+      </p>
+    </div>
+
+    <!-- Key facts -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
+      <div class="hud-card" style="padding:40px 32px;">
+        <div class="label" style="font-size:13px;margin-bottom:16px;">ПРОЕКТОВ</div>
+        <div style="font-family:var(--font-head);font-size:72px;color:var(--cyan);text-shadow:var(--glow);">20+</div>
+      </div>
+      <div class="hud-card" style="padding:40px 32px;">
+        <div class="label" style="font-size:13px;margin-bottom:16px;">КЛИЕНТОВ</div>
+        <div style="font-family:var(--font-head);font-size:72px;color:var(--cyan);text-shadow:var(--glow);">15+</div>
+      </div>
+      <div class="hud-card" style="padding:40px 32px;">
+        <div class="label" style="font-size:13px;margin-bottom:16px;">КОММИТОВ</div>
+        <div style="font-family:var(--font-head);font-size:72px;color:var(--cyan);text-shadow:var(--glow);">3K+</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">PROFILE.LOADED :: BIO.PARSE</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">02 / 10</span>
+  </div>
+  <div class="corner tl" style="width:50px;height:50px;top:15px;left:15px;"></div>
+  <div class="corner br" style="width:50px;height:50px;bottom:15px;right:15px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: SKILLS OVERVIEW                                      -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-3">
+  <div class="bg-grid"></div>
+  <div class="bg-hex"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:700px;height:700px;top:50%;right:-100px;transform:translateY(-50%);background:radial-gradient(circle,rgba(0,102,255,0.12) 0%,transparent 70%);"></div>
+
+  <div class="slide-header">
+    <span class="label">// SKILL MATRIX ANALYSIS</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">NEURAL SCAN COMPLETE</span>
+  </div>
+
+  <div style="position:absolute;top:100px;left:100px;right:100px;bottom:70px;">
+    <div class="label" style="margin-bottom:14px;">// УРОВЕНЬ КОМПЕТЕНЦИЙ</div>
+    <h2 class="title-lg" style="margin-bottom:20px;">НАВЫКИ</h2>
+    <div class="glow-line" style="width:300px;margin-bottom:48px;"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;height:700px;">
+      <!-- Left column -->
+      <div style="display:grid;grid-template-rows:1fr 1fr 1fr 1fr;gap:40px;">
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="title-sm" style="font-size:26px;">React / Next.js</span>
+            <span class="label" style="font-size:20px;color:var(--green);">92%</span>
+          </div>
+          <div class="progress-bar" style="height:16px;"><div class="progress-fill" style="width:92%;"></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="title-sm" style="font-size:26px;">Node.js / Python</span>
+            <span class="label" style="font-size:20px;color:var(--green);">88%</span>
+          </div>
+          <div class="progress-bar" style="height:16px;"><div class="progress-fill" style="width:88%;"></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="title-sm" style="font-size:26px;">TypeScript</span>
+            <span class="label" style="font-size:20px;color:var(--cyan);">90%</span>
+          </div>
+          <div class="progress-bar" style="height:16px;"><div class="progress-fill" style="width:90%;background:linear-gradient(90deg,var(--blue),var(--cyan));"></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="title-sm" style="font-size:26px;">PostgreSQL / MongoDB</span>
+            <span class="label" style="font-size:20px;color:var(--cyan);">85%</span>
+          </div>
+          <div class="progress-bar" style="height:16px;"><div class="progress-fill" style="width:85%;"></div></div>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div style="display:grid;grid-template-rows:1fr 1fr 1fr 1fr;gap:40px;">
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="title-sm" style="font-size:26px;">Docker / Kubernetes</span>
+            <span class="label" style="font-size:20px;color:var(--cyan);">80%</span>
+          </div>
+          <div class="progress-bar" style="height:16px;"><div class="progress-fill" style="width:80%;"></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="title-sm" style="font-size:26px;">AWS / GCP</span>
+            <span class="label" style="font-size:20px;color:var(--cyan);">78%</span>
+          </div>
+          <div class="progress-bar" style="height:16px;"><div class="progress-fill" style="width:78%;"></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="title-sm" style="font-size:26px;">AI / ML интеграции</span>
+            <span class="label" style="font-size:20px;color:var(--gold);">82%</span>
+          </div>
+          <div class="progress-bar" style="height:16px;"><div class="progress-fill" style="width:82%;background:linear-gradient(90deg,#ff8800,var(--gold));box-shadow:0 0 12px var(--gold);"></div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;justify-content:flex-end;gap:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span class="title-sm" style="font-size:26px;">UI/UX Design</span>
+            <span class="label" style="font-size:20px;color:var(--gold);">75%</span>
+          </div>
+          <div class="progress-bar" style="height:16px;"><div class="progress-fill" style="width:75%;background:linear-gradient(90deg,#ff8800,var(--gold));box-shadow:0 0 12px var(--gold);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">SKILL.SCAN :: MATRIX.RENDERED</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">03 / 10</span>
+  </div>
+  <div class="corner tl" style="width:50px;height:50px;top:15px;left:15px;"></div>
+  <div class="corner br" style="width:50px;height:50px;bottom:15px;right:15px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: TECH STACK                                           -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-4">
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:1000px;height:1000px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,212,255,0.06) 0%,transparent 60%);"></div>
+
+  <div class="slide-header">
+    <span class="label">// TECHNOLOGY REGISTRY</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">STACK.INVENTORY</span>
+  </div>
+
+  <div style="position:absolute;top:100px;left:100px;right:100px;bottom:70px;display:flex;flex-direction:column;">
+    <div class="label" style="margin-bottom:14px;">// ТЕХНОЛОГИЧЕСКИЙ СТЕК</div>
+    <h2 class="title-lg" style="margin-bottom:20px;">ИНСТРУМЕНТЫ</h2>
+    <div class="glow-line" style="width:350px;margin-bottom:36px;"></div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;flex:1;">
+
+      <!-- Frontend -->
+      <div class="hud-card" style="padding:40px;display:flex;flex-direction:column;">
+        <div class="label" style="font-size:14px;color:var(--cyan);margin-bottom:28px;">FRONTEND</div>
+        <div style="display:flex;flex-direction:column;gap:18px;flex:1;justify-content:space-around;">
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;">React</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;">Next.js</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;">TypeScript</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;">Tailwind CSS</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;">Framer Motion</span>
+        </div>
+      </div>
+
+      <!-- Backend -->
+      <div class="hud-card" style="padding:40px;display:flex;flex-direction:column;">
+        <div class="label" style="font-size:14px;color:var(--green);margin-bottom:28px;">BACKEND</div>
+        <div style="display:flex;flex-direction:column;gap:18px;flex:1;justify-content:space-around;">
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(0,255,136,0.5);color:var(--green);">Node.js</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(0,255,136,0.5);color:var(--green);">Python</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(0,255,136,0.5);color:var(--green);">FastAPI</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(0,255,136,0.5);color:var(--green);">GraphQL</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(0,255,136,0.5);color:var(--green);">REST API</span>
+        </div>
+      </div>
+
+      <!-- Database & Cloud -->
+      <div class="hud-card" style="padding:40px;display:flex;flex-direction:column;">
+        <div class="label" style="font-size:14px;color:var(--gold);margin-bottom:28px;">DATA & CLOUD</div>
+        <div style="display:flex;flex-direction:column;gap:18px;flex:1;justify-content:space-around;">
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,215,0,0.5);color:var(--gold);">PostgreSQL</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,215,0,0.5);color:var(--gold);">MongoDB</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,215,0,0.5);color:var(--gold);">Redis</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,215,0,0.5);color:var(--gold);">AWS</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,215,0,0.5);color:var(--gold);">GCP</span>
+        </div>
+      </div>
+
+      <!-- DevOps & AI -->
+      <div class="hud-card" style="padding:40px;display:flex;flex-direction:column;">
+        <div class="label" style="font-size:14px;color:var(--red);margin-bottom:28px;">DEVOPS & AI</div>
+        <div style="display:flex;flex-direction:column;gap:18px;flex:1;justify-content:space-around;">
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,51,102,0.5);color:var(--red);">Docker</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,51,102,0.5);color:var(--red);">Kubernetes</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,51,102,0.5);color:var(--red);">CI/CD</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,51,102,0.5);color:var(--red);">OpenAI API</span>
+          <span class="tech-tag" style="font-size:17px;padding:12px 20px;text-align:center;border-color:rgba(255,51,102,0.5);color:var(--red);">LangChain</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">TECH.REGISTRY :: STACK.INDEXED</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">04 / 10</span>
+  </div>
+  <div class="corner tl" style="width:50px;height:50px;top:15px;left:15px;"></div>
+  <div class="corner br" style="width:50px;height:50px;bottom:15px;right:15px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: PROJECT 1                                            -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-5">
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:800px;height:800px;top:-200px;right:-200px;background:radial-gradient(circle,rgba(0,102,255,0.15) 0%,transparent 70%);"></div>
+
+  <div class="slide-header">
+    <span class="label">// PROJECT DATABASE :: RECORD 001</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">CASE STUDY</span>
+  </div>
+
+  <div style="position:absolute;top:100px;left:100px;right:100px;bottom:80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+    <!-- Left: Project info -->
+    <div>
+      <div class="label" style="margin-bottom:16px;">// ПРОЕКТ 001</div>
+      <h2 class="title-lg" style="margin-bottom:12px;color:var(--cyan);">AI ANALYTICS<br>PLATFORM</h2>
+      <div class="glow-line" style="width:350px;margin-bottom:32px;"></div>
+
+      <p class="body-md" style="margin-bottom:36px;">
+        Платформа аналитики данных с интеграцией ИИ для автоматического
+        обнаружения паттернов в больших объёмах данных. Система обрабатывает
+        более 10M записей в день в режиме реального времени.
+      </p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;">
+        <span class="tech-tag">React</span>
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">FastAPI</span>
+        <span class="tech-tag">PostgreSQL</span>
+        <span class="tech-tag">OpenAI</span>
+        <span class="tech-tag">Docker</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+        <div style="text-align:center;padding:16px;border:1px solid var(--border);background:var(--surface);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--cyan);">10M+</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">записей/день</div>
+        </div>
+        <div style="text-align:center;padding:16px;border:1px solid var(--border);background:var(--surface);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--green);">94%</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">точность AI</div>
+        </div>
+        <div style="text-align:center;padding:16px;border:1px solid var(--border);background:var(--surface);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--gold);">2x</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">рост KPI</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Mock screen -->
+    <div style="height:700px;background:rgba(0,0,0,0.8);border:1px solid var(--border-bright);box-shadow:var(--glow-strong);position:relative;overflow:hidden;">
+      <div style="background:rgba(0,212,255,0.1);border-bottom:1px solid var(--border);height:40px;display:flex;align-items:center;padding:0 16px;gap:8px;">
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--red);"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--gold);"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--green);"></div>
+        <span style="font-family:var(--font-mono);font-size:13px;color:var(--text-muted);margin-left:16px;">analytics.dashboard.ai</span>
+      </div>
+      <!-- Mock dashboard content -->
+      <div style="padding:30px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;">
+          <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;">
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-bottom:8px;">TOTAL EVENTS</div>
+            <div style="font-family:var(--font-head);font-size:28px;color:var(--cyan);">10.4M</div>
+          </div>
+          <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;">
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-bottom:8px;">ANOMALIES</div>
+            <div style="font-family:var(--font-head);font-size:28px;color:var(--red);">247</div>
+          </div>
+          <div style="background:var(--surface2);border:1px solid var(--border);padding:16px;">
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-bottom:8px;">ACCURACY</div>
+            <div style="font-family:var(--font-head);font-size:28px;color:var(--green);">94.2%</div>
+          </div>
+        </div>
+        <!-- Mock chart bars -->
+        <div style="background:var(--surface);border:1px solid var(--border);padding:20px;height:340px;position:relative;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);margin-bottom:16px;">EVENT STREAM / REAL-TIME</div>
+          <div style="display:flex;align-items:flex-end;gap:12px;height:260px;">
+            <div style="flex:1;background:linear-gradient(180deg,var(--cyan),var(--blue));height:60%;opacity:0.8;box-shadow:0 0 10px var(--cyan);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--cyan),var(--blue));height:80%;opacity:0.8;box-shadow:0 0 10px var(--cyan);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--cyan),var(--blue));height:45%;opacity:0.8;box-shadow:0 0 10px var(--cyan);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--green),#00aa55);height:90%;box-shadow:0 0 10px var(--green);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--cyan),var(--blue));height:70%;opacity:0.8;box-shadow:0 0 10px var(--cyan);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--red),#aa0033);height:35%;box-shadow:0 0 10px var(--red);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--cyan),var(--blue));height:85%;opacity:0.8;box-shadow:0 0 10px var(--cyan);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--cyan),var(--blue));height:65%;opacity:0.8;box-shadow:0 0 10px var(--cyan);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--green),#00aa55);height:95%;box-shadow:0 0 10px var(--green);"></div>
+            <div style="flex:1;background:linear-gradient(180deg,var(--cyan),var(--blue));height:50%;opacity:0.8;box-shadow:0 0 10px var(--cyan);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">PROJECT.001 :: CASE_STUDY.LOADED</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">05 / 10</span>
+  </div>
+  <div class="corner tl" style="width:50px;height:50px;top:15px;left:15px;"></div>
+  <div class="corner br" style="width:50px;height:50px;bottom:15px;right:15px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: PROJECT 2                                            -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-6">
+  <div class="bg-grid"></div>
+  <div class="bg-hex"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:800px;height:800px;bottom:-200px;left:-200px;background:radial-gradient(circle,rgba(0,255,136,0.08) 0%,transparent 70%);"></div>
+
+  <div class="slide-header">
+    <span class="label">// PROJECT DATABASE :: RECORD 002</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">CASE STUDY</span>
+  </div>
+
+  <div style="position:absolute;top:100px;left:100px;right:100px;bottom:80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+    <!-- Left: Mock screen -->
+    <div style="height:700px;background:rgba(0,0,0,0.8);border:1px solid rgba(0,255,136,0.4);box-shadow:0 0 40px rgba(0,255,136,0.2);position:relative;overflow:hidden;">
+      <div style="background:rgba(0,255,136,0.1);border-bottom:1px solid rgba(0,255,136,0.3);height:40px;display:flex;align-items:center;padding:0 16px;gap:8px;">
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--red);"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--gold);"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--green);"></div>
+        <span style="font-family:var(--font-mono);font-size:13px;color:var(--text-muted);margin-left:16px;">ecommerce.platform.io</span>
+      </div>
+      <div style="padding:30px;">
+        <!-- Mock e-commerce UI -->
+        <div style="background:rgba(0,255,136,0.05);border:1px solid rgba(0,255,136,0.2);padding:16px;margin-bottom:16px;">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--green);margin-bottom:12px;">SALES DASHBOARD</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div style="padding:12px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,136,0.2);">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">TODAY</div>
+              <div style="font-family:var(--font-head);font-size:24px;color:var(--green);">₽847K</div>
+            </div>
+            <div style="padding:12px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,136,0.2);">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">ORDERS</div>
+              <div style="font-family:var(--font-head);font-size:24px;color:var(--green);">1,284</div>
+            </div>
+          </div>
+        </div>
+        <!-- Product grid mock -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+          <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border);padding:16px;height:160px;display:flex;flex-direction:column;justify-content:flex-end;">
+            <div style="flex:1;background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(0,102,255,0.2));margin-bottom:12px;border-radius:2px;"></div>
+            <div style="font-size:12px;color:var(--text);margin-bottom:4px;">Product Alpha</div>
+            <div style="font-size:14px;color:var(--green);">₽2,490</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.5);border:1px solid rgba(0,255,136,0.3);padding:16px;height:160px;display:flex;flex-direction:column;justify-content:flex-end;">
+            <div style="flex:1;background:linear-gradient(135deg,rgba(0,255,136,0.2),rgba(0,180,100,0.2));margin-bottom:12px;border-radius:2px;"></div>
+            <div style="font-size:12px;color:var(--text);margin-bottom:4px;">Product Beta</div>
+            <div style="font-size:14px;color:var(--green);">₽4,890</div>
+          </div>
+          <div style="background:rgba(0,0,0,0.5);border:1px solid var(--border);padding:16px;height:160px;display:flex;flex-direction:column;justify-content:flex-end;">
+            <div style="flex:1;background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(200,150,0,0.2));margin-bottom:12px;border-radius:2px;"></div>
+            <div style="font-size:12px;color:var(--text);margin-bottom:4px;">Product Gamma</div>
+            <div style="font-size:14px;color:var(--gold);">₽7,200</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Project info -->
+    <div>
+      <div class="label" style="margin-bottom:16px;">// ПРОЕКТ 002</div>
+      <h2 class="title-lg" style="margin-bottom:12px;color:var(--green);">E-COMMERCE<br>PLATFORM</h2>
+      <div style="height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 10px var(--green);width:350px;margin-bottom:32px;"></div>
+
+      <p class="body-md" style="margin-bottom:36px;">
+        Высоконагруженная e-commerce платформа с микросервисной архитектурой,
+        поддержкой тысяч одновременных пользователей и AI-рекомендациями товаров.
+        Интеграция с платёжными системами и складскими системами.
+      </p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;">
+        <span class="tech-tag" style="border-color:rgba(0,255,136,0.5);color:var(--green);">Next.js</span>
+        <span class="tech-tag" style="border-color:rgba(0,255,136,0.5);color:var(--green);">Node.js</span>
+        <span class="tech-tag" style="border-color:rgba(0,255,136,0.5);color:var(--green);">PostgreSQL</span>
+        <span class="tech-tag" style="border-color:rgba(0,255,136,0.5);color:var(--green);">Redis</span>
+        <span class="tech-tag" style="border-color:rgba(0,255,136,0.5);color:var(--green);">Kubernetes</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+        <div style="text-align:center;padding:16px;border:1px solid rgba(0,255,136,0.3);background:rgba(0,255,136,0.05);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--green);">50K+</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">пользователей</div>
+        </div>
+        <div style="text-align:center;padding:16px;border:1px solid rgba(0,255,136,0.3);background:rgba(0,255,136,0.05);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--green);">99.9%</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">uptime</div>
+        </div>
+        <div style="text-align:center;padding:16px;border:1px solid rgba(0,255,136,0.3);background:rgba(0,255,136,0.05);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--green);">3x</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">рост продаж</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">PROJECT.002 :: CASE_STUDY.LOADED</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">06 / 10</span>
+  </div>
+  <div class="corner tl" style="width:50px;height:50px;top:15px;left:15px;"></div>
+  <div class="corner br" style="width:50px;height:50px;bottom:15px;right:15px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: PROJECT 3                                            -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-7">
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:700px;height:700px;top:50%;right:-150px;transform:translateY(-50%);background:radial-gradient(circle,rgba(255,215,0,0.08) 0%,transparent 70%);"></div>
+
+  <div class="slide-header">
+    <span class="label">// PROJECT DATABASE :: RECORD 003</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">CASE STUDY</span>
+  </div>
+
+  <div style="position:absolute;top:100px;left:100px;right:100px;bottom:80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+    <!-- Left: Project info -->
+    <div>
+      <div class="label" style="margin-bottom:16px;">// ПРОЕКТ 003</div>
+      <h2 class="title-lg" style="margin-bottom:12px;color:var(--gold);">TELEGRAM<br>BOT PLATFORM</h2>
+      <div style="height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);box-shadow:0 0 10px var(--gold);width:350px;margin-bottom:32px;"></div>
+
+      <p class="body-md" style="margin-bottom:36px;">
+        Масштабируемая платформа для Telegram-ботов с визуальным конструктором сценариев,
+        встроенной аналитикой и AI-ответами. Поддержка 100+ ботов на одном инстансе
+        с автоматическим масштабированием.
+      </p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px;">
+        <span class="tech-tag" style="border-color:rgba(255,215,0,0.5);color:var(--gold);">Python</span>
+        <span class="tech-tag" style="border-color:rgba(255,215,0,0.5);color:var(--gold);">aiogram</span>
+        <span class="tech-tag" style="border-color:rgba(255,215,0,0.5);color:var(--gold);">FastAPI</span>
+        <span class="tech-tag" style="border-color:rgba(255,215,0,0.5);color:var(--gold);">React</span>
+        <span class="tech-tag" style="border-color:rgba(255,215,0,0.5);color:var(--gold);">GPT-4</span>
+        <span class="tech-tag" style="border-color:rgba(255,215,0,0.5);color:var(--gold);">MongoDB</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+        <div style="text-align:center;padding:16px;border:1px solid rgba(255,215,0,0.3);background:rgba(255,215,0,0.05);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--gold);">100+</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">ботов</div>
+        </div>
+        <div style="text-align:center;padding:16px;border:1px solid rgba(255,215,0,0.3);background:rgba(255,215,0,0.05);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--gold);">200K</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">пользователей</div>
+        </div>
+        <div style="text-align:center;padding:16px;border:1px solid rgba(255,215,0,0.3);background:rgba(255,215,0,0.05);">
+          <div style="font-family:var(--font-head);font-size:32px;color:var(--gold);">1M+</div>
+          <div class="label" style="font-size:11px;color:var(--text-muted);margin-top:4px;">сообщений/мес</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Mock bot interface -->
+    <div style="height:700px;background:rgba(0,0,0,0.8);border:1px solid rgba(255,215,0,0.4);box-shadow:0 0 40px rgba(255,215,0,0.15);position:relative;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="background:rgba(255,215,0,0.1);border-bottom:1px solid rgba(255,215,0,0.3);height:60px;display:flex;align-items:center;padding:0 20px;gap:12px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff8800);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:14px;color:#000;">AI</div>
+        <div>
+          <div style="font-family:var(--font-body);font-size:16px;color:var(--text);">SmartBot Assistant</div>
+          <div style="font-size:12px;color:var(--green);">● online</div>
+        </div>
+      </div>
+      <div style="flex:1;padding:20px;overflow:hidden;display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;justify-content:flex-end;">
+          <div style="background:rgba(0,102,255,0.3);border:1px solid rgba(0,102,255,0.5);padding:12px 18px;max-width:70%;font-size:16px;color:var(--text);">Привет! Помоги с отчётом по продажам</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-end;">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff8800);flex-shrink:0;"></div>
+          <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);padding:12px 18px;max-width:75%;font-size:16px;color:var(--text);line-height:1.5;">Конечно! За последний месяц продажи выросли на <span style="color:var(--green);">+34%</span>. Топ-3 категории: Electronics, Fashion, Home.</div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;">
+          <div style="background:rgba(0,102,255,0.3);border:1px solid rgba(0,102,255,0.5);padding:12px 18px;max-width:70%;font-size:16px;color:var(--text);">Покажи прогноз на следующий квартал</div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-end;">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff8800);flex-shrink:0;"></div>
+          <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);padding:12px 18px;max-width:75%;font-size:16px;color:var(--text);line-height:1.5;">По модели прогноза ожидается рост <span style="color:var(--gold);">+22%</span> в Q2. Рекомендую усилить маркетинг в категории Electronics.</div>
+        </div>
+        <!-- typing indicator -->
+        <div style="display:flex;gap:12px;align-items:center;">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff8800);flex-shrink:0;"></div>
+          <div style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);padding:12px 18px;">
+            <div style="display:flex;gap:6px;align-items:center;">
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);opacity:0.6;"></div>
+              <div style="width:8px;height:8px;border-radius:50%;background:var(--gold);opacity:0.3;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">PROJECT.003 :: CASE_STUDY.LOADED</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">07 / 10</span>
+  </div>
+  <div class="corner tl" style="width:50px;height:50px;top:15px;left:15px;"></div>
+  <div class="corner br" style="width:50px;height:50px;bottom:15px;right:15px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: EXPERIENCE TIMELINE                                  -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-8">
+  <div class="bg-grid"></div>
+  <div class="bg-hex"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:900px;height:900px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,212,255,0.05) 0%,transparent 70%);"></div>
+
+  <div class="slide-header">
+    <span class="label">// CAREER TIMELINE ANALYSIS</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">CHRONOLOGICAL DATA</span>
+  </div>
+
+  <div style="position:absolute;top:100px;left:100px;right:100px;bottom:70px;display:flex;flex-direction:column;">
+    <div class="label" style="margin-bottom:14px;">// КАРЬЕРНЫЙ ПУТЬ</div>
+    <h2 class="title-lg" style="margin-bottom:20px;">ОПЫТ РАБОТЫ</h2>
+    <div class="glow-line" style="width:380px;margin-bottom:40px;"></div>
+
+    <div style="position:relative;padding-left:80px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+      <!-- Vertical line -->
+      <div style="position:absolute;left:24px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--cyan),rgba(0,212,255,0.1));box-shadow:0 0 8px rgba(0,212,255,0.4);"></div>
+
+      <!-- Timeline item 1 -->
+      <div style="position:relative;">
+        <div style="position:absolute;left:-64px;top:24px;width:20px;height:20px;border-radius:50%;background:var(--cyan);box-shadow:0 0 20px var(--cyan);border:3px solid var(--bg);"></div>
+        <div style="position:absolute;left:-48px;top:33px;width:40px;height:2px;background:var(--border);"></div>
+        <div class="hud-card" style="padding:36px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+            <div>
+              <h3 class="title-sm" style="font-size:26px;color:var(--cyan);">Senior Full-Stack Developer</h3>
+              <p class="label" style="font-size:16px;color:var(--text-dim);margin-top:8px;">TechCorp Inc. · Москва</p>
+            </div>
+            <span class="label" style="font-size:16px;background:rgba(0,212,255,0.1);padding:10px 24px;border:1px solid var(--border);">2022 — наст. время</span>
+          </div>
+          <p class="body-md" style="font-size:20px;">Разработка высоконагруженных сервисов, руководство командой 5 разработчиков, внедрение AI-решений в продуктовые процессы.</p>
+        </div>
+      </div>
+
+      <!-- Timeline item 2 -->
+      <div style="position:relative;">
+        <div style="position:absolute;left:-64px;top:24px;width:20px;height:20px;border-radius:50%;background:var(--blue);box-shadow:0 0 20px var(--blue);border:3px solid var(--bg);"></div>
+        <div style="position:absolute;left:-48px;top:33px;width:40px;height:2px;background:var(--border);"></div>
+        <div class="hud-card" style="padding:36px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+            <div>
+              <h3 class="title-sm" style="font-size:26px;color:var(--blue);">Middle Developer</h3>
+              <p class="label" style="font-size:16px;color:var(--text-dim);margin-top:8px;">StartupXYZ · Удалённо</p>
+            </div>
+            <span class="label" style="font-size:16px;background:rgba(0,102,255,0.1);padding:10px 24px;border:1px solid rgba(0,102,255,0.3);">2020 — 2022</span>
+          </div>
+          <p class="body-md" style="font-size:20px;">Создание MVP продуктов, настройка CI/CD процессов, работа с облачными сервисами AWS, оптимизация производительности баз данных.</p>
+        </div>
+      </div>
+
+      <!-- Timeline item 3 -->
+      <div style="position:relative;">
+        <div style="position:absolute;left:-64px;top:24px;width:20px;height:20px;border-radius:50%;background:var(--text-muted);box-shadow:0 0 12px rgba(0,212,255,0.4);border:3px solid var(--bg);"></div>
+        <div style="position:absolute;left:-48px;top:33px;width:40px;height:2px;background:var(--border);"></div>
+        <div class="hud-card" style="padding:36px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+            <div>
+              <h3 class="title-sm" style="font-size:26px;color:var(--text-dim);">Junior Developer</h3>
+              <p class="label" style="font-size:16px;color:var(--text-dim);margin-top:8px;">Agency Digital · Москва</p>
+            </div>
+            <span class="label" style="font-size:16px;background:rgba(0,212,255,0.05);padding:10px 24px;border:1px solid var(--border);">2019 — 2020</span>
+          </div>
+          <p class="body-md" style="font-size:20px;">Разработка веб-приложений, изучение React/Node.js стека, участие в agile-командах, работа с клиентами.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">CAREER.TIMELINE :: LOADED</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">08 / 10</span>
+  </div>
+  <div class="corner tl" style="width:50px;height:50px;top:15px;left:15px;"></div>
+  <div class="corner br" style="width:50px;height:50px;bottom:15px;right:15px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: STATS / ACHIEVEMENTS                                 -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-9">
+  <div class="bg-grid"></div>
+  <div class="bg-hex"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:1200px;height:1200px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,212,255,0.06) 0%,transparent 60%);"></div>
+
+  <div class="slide-header">
+    <span class="label">// PERFORMANCE METRICS</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">SYSTEM DIAGNOSTICS</span>
+  </div>
+
+  <div style="position:absolute;top:120px;left:100px;right:100px;bottom:80px;display:flex;flex-direction:column;justify-content:center;">
+    <div style="text-align:center;margin-bottom:60px;">
+      <div class="label" style="margin-bottom:16px;">// ДОСТИЖЕНИЯ И МЕТРИКИ</div>
+      <h2 class="title-lg">РЕЗУЛЬТАТЫ</h2>
+      <div class="glow-line" style="width:300px;margin:24px auto 0;"></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:32px;">
+
+      <div style="text-align:center;padding:48px 32px;background:var(--surface);border:1px solid var(--border-bright);position:relative;">
+        <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:80px;height:3px;background:var(--cyan);box-shadow:var(--glow);"></div>
+        <div style="font-family:var(--font-head);font-size:72px;font-weight:900;color:var(--cyan);text-shadow:var(--glow-strong);margin-bottom:16px;">20+</div>
+        <div class="title-sm" style="font-size:16px;color:var(--text-dim);margin-bottom:8px;">Проектов</div>
+        <div class="label" style="font-size:12px;color:var(--text-muted);">завершено</div>
+      </div>
+
+      <div style="text-align:center;padding:48px 32px;background:var(--surface);border:1px solid rgba(0,255,136,0.3);position:relative;">
+        <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:80px;height:3px;background:var(--green);box-shadow:0 0 10px var(--green);"></div>
+        <div style="font-family:var(--font-head);font-size:72px;font-weight:900;color:var(--green);text-shadow:0 0 20px rgba(0,255,136,0.8);margin-bottom:16px;">5+</div>
+        <div class="title-sm" style="font-size:16px;color:var(--text-dim);margin-bottom:8px;">Лет опыта</div>
+        <div class="label" style="font-size:12px;color:var(--text-muted);">коммерческой разработки</div>
+      </div>
+
+      <div style="text-align:center;padding:48px 32px;background:var(--surface);border:1px solid rgba(255,215,0,0.3);position:relative;">
+        <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:80px;height:3px;background:var(--gold);box-shadow:0 0 10px var(--gold);"></div>
+        <div style="font-family:var(--font-head);font-size:72px;font-weight:900;color:var(--gold);text-shadow:0 0 20px rgba(255,215,0,0.8);margin-bottom:16px;">15+</div>
+        <div class="title-sm" style="font-size:16px;color:var(--text-dim);margin-bottom:8px;">Клиентов</div>
+        <div class="label" style="font-size:12px;color:var(--text-muted);">довольных результатом</div>
+      </div>
+
+      <div style="text-align:center;padding:48px 32px;background:var(--surface);border:1px solid rgba(255,51,102,0.3);position:relative;">
+        <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:80px;height:3px;background:var(--red);box-shadow:0 0 10px var(--red);"></div>
+        <div style="font-family:var(--font-head);font-size:72px;font-weight:900;color:var(--red);text-shadow:0 0 20px rgba(255,51,102,0.8);margin-bottom:16px;">∞</div>
+        <div class="title-sm" style="font-size:16px;color:var(--text-dim);margin-bottom:8px;">Кофе</div>
+        <div class="label" style="font-size:12px;color:var(--text-muted);">выпито за это время</div>
+      </div>
+
+    </div>
+
+    <!-- Bottom stats row -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;">
+      <div style="display:flex;align-items:center;gap:20px;padding:20px 32px;background:var(--surface);border:1px solid var(--border);">
+        <div style="width:48px;height:48px;border-radius:50%;border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;">
+          <div style="width:20px;height:20px;background:var(--cyan);clip-path:polygon(50% 0%,100% 100%,0% 100%);"></div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:28px;color:var(--text);">3,000+</div>
+          <div class="label" style="font-size:12px;color:var(--text-muted);">Git коммитов</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:20px;padding:20px 32px;background:var(--surface);border:1px solid var(--border);">
+        <div style="width:48px;height:48px;border-radius:50%;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;">
+          <div style="width:24px;height:4px;background:var(--green);box-shadow:0 0 8px var(--green);"></div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:28px;color:var(--text);">250K+</div>
+          <div class="label" style="font-size:12px;color:var(--text-muted);">строк кода</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:20px;padding:20px 32px;background:var(--surface);border:1px solid var(--border);">
+        <div style="width:48px;height:48px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;">
+          <div style="font-family:var(--font-head);font-size:18px;color:var(--gold);">★</div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:28px;color:var(--text);">4.9 / 5</div>
+          <div class="label" style="font-size:12px;color:var(--text-muted);">рейтинг клиентов</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">METRICS.COMPUTE :: STATS.RENDER</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">09 / 10</span>
+  </div>
+  <div class="corner tl" style="width:50px;height:50px;top:15px;left:15px;"></div>
+  <div class="corner br" style="width:50px;height:50px;bottom:15px;right:15px;"></div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- SLIDE 10: CONTACTS                                            -->
+<!-- ============================================================ -->
+<section class="slide" id="slide-10">
+  <div class="bg-grid"></div>
+  <div class="bg-hex"></div>
+  <div class="scanline"></div>
+
+  <div class="bg-radial" style="width:900px;height:900px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(0,212,255,0.1) 0%,transparent 60%);"></div>
+
+  <!-- Big arc decoration -->
+  <div style="position:absolute;right:-100px;top:50%;transform:translateY(-50%);">
+    <div class="arc-circle glow" style="width:600px;height:600px;opacity:0.4;"></div>
+    <div class="arc-circle" style="width:480px;height:480px;top:60px;left:60px;border-color:rgba(0,102,255,0.3);opacity:0.5;"></div>
+    <div class="arc-circle" style="width:360px;height:360px;top:120px;left:120px;border-color:rgba(0,212,255,0.4);opacity:0.6;"></div>
+  </div>
+
+  <div class="slide-header">
+    <span class="label">// COMMUNICATION PROTOCOLS</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">CONTACT.INIT</span>
+  </div>
+
+  <div style="position:absolute;top:100px;left:100px;width:1000px;bottom:70px;display:flex;flex-direction:column;justify-content:space-between;">
+    <div>
+      <div class="label" style="margin-bottom:16px;">// СВЯЗЬ СО МНОЙ</div>
+      <h2 class="title-xl" style="font-size:72px;margin-bottom:12px;">КОНТАКТЫ</h2>
+      <div class="glow-line" style="width:400px;margin-bottom:0;"></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:24px;">
+
+      <!-- Email -->
+      <div style="display:flex;align-items:center;gap:40px;padding:32px 40px;background:var(--surface);border:1px solid var(--border);border-left:6px solid var(--cyan);">
+        <div style="width:72px;height:72px;border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:26px;color:var(--cyan);flex-shrink:0;">@</div>
+        <div>
+          <div class="label" style="font-size:14px;margin-bottom:8px;">EMAIL</div>
+          <span style="font-family:var(--font-mono);font-size:28px;color:var(--text);">alex.petrov@example.com</span>
+        </div>
+      </div>
+
+      <!-- Telegram -->
+      <div style="display:flex;align-items:center;gap:40px;padding:32px 40px;background:var(--surface);border:1px solid rgba(0,120,255,0.4);border-left:6px solid var(--blue);">
+        <div style="width:72px;height:72px;border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:20px;color:var(--blue);flex-shrink:0;">TG</div>
+        <div>
+          <div class="label" style="font-size:14px;margin-bottom:8px;color:var(--blue);">TELEGRAM</div>
+          <span style="font-family:var(--font-mono);font-size:28px;color:var(--text);">@alex_petrov_dev</span>
+        </div>
+      </div>
+
+      <!-- GitHub -->
+      <div style="display:flex;align-items:center;gap:40px;padding:32px 40px;background:var(--surface);border:1px solid rgba(0,255,136,0.3);border-left:6px solid var(--green);">
+        <div style="width:72px;height:72px;border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:18px;color:var(--green);flex-shrink:0;">GH</div>
+        <div>
+          <div class="label" style="font-size:14px;margin-bottom:8px;color:var(--green);">GITHUB</div>
+          <span style="font-family:var(--font-mono);font-size:28px;color:var(--text);">github.com/alex-petrov</span>
+        </div>
+      </div>
+
+      <!-- LinkedIn -->
+      <div style="display:flex;align-items:center;gap:40px;padding:32px 40px;background:var(--surface);border:1px solid rgba(255,215,0,0.3);border-left:6px solid var(--gold);">
+        <div style="width:72px;height:72px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:18px;color:var(--gold);flex-shrink:0;">LI</div>
+        <div>
+          <div class="label" style="font-size:14px;margin-bottom:8px;color:var(--gold);">LINKEDIN</div>
+          <span style="font-family:var(--font-mono);font-size:28px;color:var(--text);">linkedin.com/in/alex-petrov</span>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="body-md" style="font-size:20px;color:var(--text-muted);">
+      Открыт к новым проектам, фриланс-задачам и интересным предложениям о сотрудничестве.
+    </p>
+  </div>
+
+  <div class="slide-footer">
+    <span class="label" style="font-size:12px;color:var(--text-muted);">JARVIS PORTFOLIO SYSTEM :: SESSION.END</span>
+    <span class="label" style="font-size:12px;color:var(--text-muted);">10 / 10</span>
+  </div>
+
+  <!-- Corners -->
+  <div class="corner tl" style="width:60px;height:60px;top:20px;left:20px;"></div>
+  <div class="corner tr" style="width:60px;height:60px;top:20px;right:20px;"></div>
+  <div class="corner bl" style="width:60px;height:60px;bottom:20px;left:20px;"></div>
+  <div class="corner br" style="width:60px;height:60px;bottom:20px;right:20px;"></div>
+</section>
+
+</body>
+</html>

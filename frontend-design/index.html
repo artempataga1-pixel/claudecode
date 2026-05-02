@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ботаника — Доставка цветов в Москве</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0c1a10;
+      --bg2:      #111f15;
+      --bg3:      #162319;
+      --cream:    #f0e6d0;
+      --cream2:   #c8baa8;
+      --gold:     #c4956a;
+      --gold2:    #e8b88a;
+      --blush:    #c9938e;
+      --green:    #2d5a3d;
+      --green2:   #3d7a52;
+      --text:     #f0e6d0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Raleway', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+    /* ─── HEADER ─── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      height: 72px;
+      background: rgba(12,26,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(196,149,106,0.15);
+      transition: all 0.3s;
+    }
+    header.scrolled { height: 60px; background: rgba(12,26,16,0.97); }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      color: var(--cream);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: radial-gradient(circle at 50% 40%, #d4a5a5 0%, #c4956a 40%, transparent 70%),
+                  radial-gradient(circle at 30% 70%, #2d5a3d 0%, transparent 60%);
+      border-radius: 50% 50% 40% 60%;
+      flex-shrink: 0;
+    }
+
+    nav { display: flex; gap: 36px; align-items: center; }
+    nav a {
+      text-decoration: none; color: var(--cream2);
+      font-size: 13px; font-weight: 400; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+    nav a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1px; background: var(--gold);
+      transform: scaleX(0); transition: transform 0.2s;
+    }
+    nav a:hover { color: var(--cream); }
+    nav a:hover::after { transform: scaleX(1); }
+
+    .header-actions { display: flex; gap: 20px; align-items: center; }
+    .btn-header {
+      padding: 10px 24px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Raleway', sans-serif;
+      font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .btn-header:hover { background: var(--gold); color: var(--bg); }
+
+    .cart-icon {
+      position: relative; cursor: pointer; padding: 8px;
+      color: var(--cream2); transition: color 0.2s;
+    }
+    .cart-icon:hover { color: var(--cream); }
+    .cart-icon svg { display: block; }
+    .cart-badge {
+      position: absolute; top: 2px; right: 2px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--gold); color: var(--bg);
+      font-size: 9px; font-weight: 600; letter-spacing: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: grid; grid-template-columns: 1fr 1fr;
+      padding-top: 72px; overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 64px 80px 80px;
+      position: relative; z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 32px;
+    }
+    .hero-badge::before {
+      content: ''; display: block;
+      width: 32px; height: 1px; background: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 6vw, 90px);
+      font-weight: 300; line-height: 1.02;
+      margin-bottom: 28px;
+    }
+    .hero-title em { font-style: italic; color: var(--gold2); }
+    .hero-title .line2 { color: var(--cream2); font-size: 0.85em; }
+
+    .hero-desc {
+      font-size: 15px; line-height: 1.7;
+      color: var(--cream2); max-width: 400px;
+      margin-bottom: 48px;
+    }
+
+    .hero-ctas { display: flex; gap: 16px; align-items: center; margin-bottom: 64px; }
+    .btn-primary {
+      padding: 16px 40px;
+      background: var(--gold);
+      color: var(--bg);
+      border: none; cursor: pointer;
+      font-family: 'Raleway', sans-serif;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+    .btn-ghost {
+      padding: 16px 32px;
+      background: transparent;
+      border: 1px solid rgba(240,230,208,0.25);
+      color: var(--cream2);
+      cursor: pointer;
+      font-family: 'Raleway', sans-serif;
+      font-size: 12px; font-weight: 400; letter-spacing: 0.12em;
+      text-transform: uppercase; text-decoration: none;
+      transition: all 0.25s; display: inline-block;
+    }
+    .btn-ghost:hover { border-color: var(--cream2); color: var(--cream); }
+
+    .hero-stats {
+      display: flex; gap: 40px;
+    }
+    .stat-item { display: flex; flex-direction: column; gap: 4px; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px; font-weight: 300; color: var(--cream);
+    }
+    .stat-label {
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--cream2);
+    }
+
+    .hero-right {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      padding: 80px 48px;
+    }
+
+    /* CSS Bouquet illustration */
+    .hero-bouquet {
+      position: relative; width: 380px; height: 480px;
+    }
+    .bouquet-wrap {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(201,147,142,0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 50%, rgba(196,149,106,0.3) 0%, transparent 40%),
+        radial-gradient(ellipse at 70% 40%, rgba(45,90,61,0.5) 0%, transparent 45%),
+        radial-gradient(ellipse at 55% 60%, rgba(201,147,142,0.25) 0%, transparent 50%);
+      border-radius: 60% 40% 50% 50% / 60% 60% 40% 40%;
+      overflow: hidden;
+    }
+
+    /* Floating petals / flowers */
+    .petal {
+      position: absolute;
+      border-radius: 50% 0 50% 0;
+      opacity: 0.85;
+      animation: petalFloat 6s ease-in-out infinite;
+    }
+    @keyframes petalFloat {
+      0%, 100% { transform: translateY(0) rotate(var(--r)); }
+      50%       { transform: translateY(-12px) rotate(calc(var(--r) + 8deg)); }
+    }
+
+    .flower-card {
+      position: absolute; left: -30px; bottom: 80px;
+      background: rgba(17,31,21,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(196,149,106,0.3);
+      padding: 16px 20px;
+      min-width: 180px;
+      animation: slideInLeft 0.8s ease 0.3s both;
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .flower-card-label {
+      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 6px;
+    }
+    .flower-card-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 400; color: var(--cream);
+    }
+    .flower-card-sub { font-size: 11px; color: var(--cream2); margin-top: 2px; }
+
+    .delivery-badge {
+      position: absolute; right: -20px; top: 60px;
+      background: var(--gold);
+      color: var(--bg);
+      padding: 12px 18px;
+      text-align: center;
+      animation: slideInRight 0.8s ease 0.5s both;
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .delivery-badge .d-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 300; line-height: 1;
+    }
+    .delivery-badge .d-label {
+      font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Fake product image using CSS gradients */
+    .product-img-css {
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse 120px 100px at 45% 25%, #c9938e 0%, #b8726e 40%, transparent 70%),
+        radial-gradient(ellipse 80px 70px at 65% 35%, #d4a5a5 0%, #c9938e 50%, transparent 75%),
+        radial-gradient(ellipse 90px 80px at 30% 40%, #e8b88a 0%, #c4956a 50%, transparent 75%),
+        radial-gradient(ellipse 100px 90px at 55% 50%, #c9938e 0%, #a86260 50%, transparent 75%),
+        radial-gradient(ellipse 60px 50px at 25% 30%, #d4a5a5 0%, transparent 70%),
+        radial-gradient(ellipse 140px 200px at 50% 70%, #1a3d22 0%, #2d5a3d 50%, transparent 85%),
+        linear-gradient(180deg, #0c1a10 0%, #1a3d22 100%);
+      border-radius: inherit;
+    }
+
+    /* ─── HERO BG DECOR ─── */
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 55%; height: 100%;
+      background: var(--bg3);
+      z-index: 0;
+    }
+    .hero-right { z-index: 1; }
+
+    /* ─── DELIVERY STRIP ─── */
+    .delivery-strip {
+      background: var(--green);
+      padding: 14px 0;
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex; gap: 0;
+      animation: marquee 30s linear infinite;
+      white-space: nowrap;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 0 40px;
+      font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--cream); flex-shrink: 0;
+    }
+    .marquee-sep {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--gold2); opacity: 0.6; flex-shrink: 0;
+    }
+
+    /* ─── SECTION COMMON ─── */
+    section { padding: 100px 80px; }
+    .section-header { margin-bottom: 60px; }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 20px;
+    }
+    .section-tag::before {
+      content: ''; display: block; width: 24px; height: 1px; background: var(--gold);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 4vw, 60px);
+      font-weight: 300; line-height: 1.1;
+    }
+    .section-title em { font-style: italic; color: var(--gold2); }
+
+    /* ─── CATEGORIES ─── */
+    .categories { background: var(--bg2); }
+    .cats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+    .cat-card {
+      position: relative; overflow: hidden;
+      cursor: pointer; text-decoration: none;
+      aspect-ratio: 3/4;
+      transition: transform 0.3s;
+    }
+    .cat-card:hover { transform: translateY(-4px); }
+    .cat-img {
+      width: 100%; height: 100%;
+      transition: transform 0.5s;
+    }
+    .cat-card:hover .cat-img { transform: scale(1.05); }
+    .cat-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(12,26,16,0.9) 100%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 20px 16px;
+    }
+    .cat-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 400; color: var(--cream);
+      margin-bottom: 4px;
+    }
+    .cat-count {
+      font-size: 11px; letter-spacing: 0.1em; color: var(--cream2);
+    }
+
+    /* CSS flower backgrounds per category */
+    .cat-roses .cat-img { background: radial-gradient(ellipse at 40% 30%, #c94040 0%, #8b1a1a 40%, #1a0a0a 100%); }
+    .cat-peonies .cat-img { background: radial-gradient(ellipse at 55% 35%, #d48aa0 0%, #a84870 40%, #1a0d12 100%); }
+    .cat-tulips .cat-img { background: radial-gradient(ellipse at 45% 30%, #e8c070 0%, #c47830 50%, #1a1008 100%); }
+    .cat-mixed .cat-img { background: radial-gradient(ellipse at 50% 30%, #c9938e 0%, #7a4545 30%, #c4956a 50%, #2d5a3d 70%, #0c1a10 100%); }
+    .cat-plants .cat-img { background: radial-gradient(ellipse at 45% 40%, #4a8a60 0%, #2d5a3d 40%, #1a2e1a 100%); }
+
+    /* ─── PRODUCTS ─── */
+    .products { background: var(--bg); }
+    .products-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 60px;
+    }
+    .products-filters {
+      display: flex; gap: 8px;
+    }
+    .filter-btn {
+      padding: 8px 20px;
+      background: transparent;
+      border: 1px solid rgba(240,230,208,0.15);
+      color: var(--cream2);
+      font-family: 'Raleway', sans-serif;
+      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      border-color: var(--gold); color: var(--gold);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: var(--bg2);
+      cursor: pointer; position: relative;
+      transition: transform 0.3s;
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .product-card:hover { transform: translateY(-6px); }
+
+    .product-thumb {
+      position: relative; aspect-ratio: 3/4; overflow: hidden;
+    }
+    .product-thumb-img {
+      width: 100%; height: 100%;
+      transition: transform 0.5s;
+    }
+    .product-card:hover .product-thumb-img { transform: scale(1.06); }
+
+    .p1 .product-thumb-img { background:
+      radial-gradient(ellipse 80px 70px at 40% 20%, #c94060 0%, #8b1a30 50%, transparent 70%),
+      radial-gradient(ellipse 60px 55px at 60% 30%, #e05070 0%, #c02040 60%, transparent 75%),
+      radial-gradient(ellipse 70px 60px at 50% 40%, #c94060 0%, transparent 65%),
+      radial-gradient(ellipse 50px 100px at 48% 65%, #2d5a3d 0%, #1a3d22 60%, transparent 85%),
+      linear-gradient(180deg, #1a0810 0%, #0c1a10 100%); }
+
+    .p2 .product-thumb-img { background:
+      radial-gradient(ellipse 90px 80px at 50% 25%, #d48aa0 0%, #b86085 50%, transparent 70%),
+      radial-gradient(ellipse 70px 60px at 35% 35%, #e8a0b8 0%, #c07090 60%, transparent 75%),
+      radial-gradient(ellipse 60px 55px at 65% 35%, #c97090 0%, transparent 65%),
+      radial-gradient(ellipse 60px 120px at 48% 68%, #3d2228 0%, #1a1218 60%, transparent 85%),
+      linear-gradient(180deg, #1a0d15 0%, #0c1a10 100%); }
+
+    .p3 .product-thumb-img { background:
+      radial-gradient(ellipse 80px 70px at 45% 22%, #f0d070 0%, #c4a030 50%, transparent 70%),
+      radial-gradient(ellipse 60px 55px at 62% 30%, #e8c060 0%, #c09020 60%, transparent 75%),
+      radial-gradient(ellipse 55px 50px at 30% 35%, #f0d070 0%, transparent 65%),
+      radial-gradient(ellipse 55px 110px at 48% 67%, #2d5a3d 0%, #1a3020 60%, transparent 85%),
+      linear-gradient(180deg, #1a1508 0%, #0c1a10 100%); }
+
+    .p4 .product-thumb-img { background:
+      radial-gradient(ellipse 100px 90px at 50% 28%, #c9938e 0%, #a86865 50%, transparent 70%),
+      radial-gradient(ellipse 70px 65px at 30% 38%, #d4a5a5 0%, #b87878 55%, transparent 72%),
+      radial-gradient(ellipse 75px 68px at 68% 33%, #e8b88a 0%, #c4956a 55%, transparent 72%),
+      radial-gradient(ellipse 65px 130px at 48% 70%, #2d5a3d 0%, #1a3d22 55%, transparent 85%),
+      linear-gradient(180deg, #180e0e 0%, #0c1a10 100%); }
+
+    .product-badge {
+      position: absolute; top: 16px; left: 16px;
+      padding: 4px 10px;
+      font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 500;
+    }
+    .badge-new { background: var(--green); color: var(--cream); }
+    .badge-hit { background: var(--blush); color: var(--bg); }
+    .badge-sale { background: var(--gold); color: var(--bg); }
+
+    .product-wish {
+      position: absolute; top: 12px; right: 12px;
+      width: 36px; height: 36px;
+      background: rgba(12,26,16,0.6);
+      backdrop-filter: blur(4px);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; transition: opacity 0.2s;
+    }
+    .product-card:hover .product-wish { opacity: 1; }
+
+    .product-info { padding: 20px; }
+    .product-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 400;
+      color: var(--cream); margin-bottom: 6px; line-height: 1.2;
+    }
+    .product-comp {
+      font-size: 12px; color: var(--cream2);
+      margin-bottom: 14px; line-height: 1.5;
+    }
+    .product-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .product-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 400; color: var(--gold);
+    }
+    .product-price-old {
+      font-size: 14px; color: var(--cream2);
+      text-decoration: line-through; margin-left: 8px;
+    }
+    .btn-add {
+      width: 40px; height: 40px;
+      background: var(--green);
+      border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--cream); transition: all 0.2s;
+    }
+    .btn-add:hover { background: var(--green2); }
+
+    /* ─── ADVANTAGES ─── */
+    .advantages { background: var(--bg3); }
+    .adv-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 48px;
+    }
+    .adv-item {}
+    .adv-icon {
+      width: 52px; height: 52px;
+      border: 1px solid rgba(196,149,106,0.4);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+    .adv-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 400; color: var(--cream);
+      margin-bottom: 10px;
+    }
+    .adv-desc { font-size: 13px; color: var(--cream2); line-height: 1.7; }
+
+    /* ─── PROMO BANNER ─── */
+    .promo-banner {
+      padding: 0 80px 100px;
+      background: var(--bg3);
+    }
+    .promo-inner {
+      background: var(--green);
+      padding: 64px 80px;
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 40px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .promo-inner::before {
+      content: '';
+      position: absolute; right: -80px; top: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(196,149,106,0.25) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .promo-inner::after {
+      content: '';
+      position: absolute; left: 40%; bottom: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(201,147,142,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .promo-text {}
+    .promo-tag {
+      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold2); margin-bottom: 16px;
+    }
+    .promo-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px; font-weight: 300; line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .promo-title em { font-style: italic; color: var(--gold2); }
+    .promo-desc { font-size: 14px; color: rgba(240,230,208,0.75); max-width: 480px; }
+    .promo-cta {
+      position: relative; z-index: 1; flex-shrink: 0;
+      text-align: right;
+    }
+    .promo-price-label {
+      font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold2); margin-bottom: 6px;
+    }
+    .promo-price-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px; font-weight: 300; line-height: 1;
+      color: var(--cream); margin-bottom: 4px;
+      font-variant-numeric: lining-nums;
+      font-feature-settings: "lnum" 1;
+    }
+    .promo-price-unit {
+      font-size: 13px; color: rgba(240,230,208,0.7); margin-bottom: 24px;
+    }
+
+    /* ─── REVIEWS ─── */
+    .reviews { background: var(--bg); }
+    .reviews-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .review-card {
+      background: var(--bg2);
+      padding: 32px;
+      border-top: 2px solid transparent;
+      transition: border-color 0.3s;
+      position: relative;
+    }
+    .review-card:hover { border-top-color: var(--gold); }
+    .review-stars {
+      display: flex; gap: 4px; margin-bottom: 20px;
+      color: var(--gold); font-size: 14px;
+    }
+    .review-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px; font-weight: 300; font-style: italic;
+      line-height: 1.6; color: var(--cream);
+      margin-bottom: 24px;
+    }
+    .review-author { display: flex; align-items: center; gap: 12px; }
+    .review-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--green); overflow: hidden; flex-shrink: 0;
+    }
+    .review-avatar-inner {
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 35%, rgba(240,230,208,0.4) 0%, transparent 60%),
+                  linear-gradient(180deg, var(--green2) 0%, var(--green) 100%);
+    }
+    .review-name {
+      font-size: 13px; font-weight: 500; color: var(--cream); margin-bottom: 2px;
+    }
+    .review-date { font-size: 11px; color: var(--cream2); letter-spacing: 0.05em; }
+    .review-quote {
+      position: absolute; top: 24px; right: 24px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 60px; line-height: 1;
+      color: rgba(196,149,106,0.2);
+    }
+
+    /* ─── GALLERY ─── */
+    .gallery { background: var(--bg2); padding: 80px; }
+    .gallery-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 240px 240px;
+      gap: 8px;
+    }
+    .gallery-item {
+      overflow: hidden; cursor: pointer;
+      position: relative;
+    }
+    .gallery-item:first-child { grid-row: 1 / 3; }
+    .gallery-img {
+      width: 100%; height: 100%;
+      transition: transform 0.5s;
+    }
+    .gallery-item:hover .gallery-img { transform: scale(1.06); }
+    .gallery-item:hover::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(12,26,16,0.4);
+    }
+
+    .g1 .gallery-img { background: radial-gradient(ellipse at 45% 35%, #c9938e 0%, #8b4545 35%, #2d5a3d 65%, #0c1a10 100%); }
+    .g2 .gallery-img { background: radial-gradient(ellipse at 50% 40%, #e8c070 0%, #c4956a 40%, #1a1008 100%); }
+    .g3 .gallery-img { background: radial-gradient(ellipse at 50% 40%, #d48aa0 0%, #a84870 40%, #1a0d12 100%); }
+    .g4 .gallery-img { background: radial-gradient(ellipse at 50% 40%, #c94060 0%, #8b1a30 40%, #0c1a10 100%); }
+    .g5 .gallery-img { background: radial-gradient(ellipse at 50% 40%, #4a8a60 0%, #2d5a3d 45%, #0c1a10 100%); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #070f09;
+      padding: 80px 80px 40px;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px; margin-bottom: 60px;
+    }
+    .footer-brand {}
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 300; letter-spacing: 0.18em;
+      color: var(--cream); margin-bottom: 16px;
+    }
+    .footer-tagline { font-size: 13px; color: var(--cream2); line-height: 1.7; max-width: 260px; }
+    .footer-social { display: flex; gap: 12px; margin-top: 28px; }
+    .social-link {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(196,149,106,0.3);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--cream2); font-size: 13px;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .social-link:hover { border-color: var(--gold); color: var(--gold); }
+    .footer-col {}
+    .footer-col-title {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 24px;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a {
+      text-decoration: none; color: var(--cream2); font-size: 13px;
+      transition: color 0.2s; letter-spacing: 0.03em;
+    }
+    .footer-links a:hover { color: var(--cream); }
+    .footer-phone {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; color: var(--cream); margin-bottom: 6px; letter-spacing: 0.05em;
+    }
+    .footer-phone-label { font-size: 11px; color: var(--cream2); letter-spacing: 0.1em; }
+    .footer-bottom {
+      border-top: 1px solid rgba(196,149,106,0.12);
+      padding-top: 28px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-copy { font-size: 12px; color: rgba(200,186,168,0.5); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-badge  { animation: fadeInUp 0.7s ease 0.1s both; }
+    .hero-title  { animation: fadeInUp 0.7s ease 0.25s both; }
+    .hero-desc   { animation: fadeInUp 0.7s ease 0.4s both; }
+    .hero-ctas   { animation: fadeInUp 0.7s ease 0.55s both; }
+    .hero-stats  { animation: fadeInUp 0.7s ease 0.7s both; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1200px) {
+      .cats-grid { grid-template-columns: repeat(3, 1fr); }
+      .products-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 900px) {
+      header { padding: 0 24px; }
+      nav { display: none; }
+      section { padding: 64px 24px; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 60px 24px; }
+      .hero-right { display: none; }
+      .hero::before { display: none; }
+      .cats-grid { grid-template-columns: repeat(2, 1fr); }
+      .adv-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .gallery { padding: 40px 24px; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item:first-child { grid-row: auto; }
+      .promo-inner { grid-template-columns: 1fr; padding: 40px 32px; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      footer { padding: 48px 24px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header id="header">
+  <a href="index.html" class="logo">
+    <div class="logo-icon"></div>
+    БОТАНИКА
+  </a>
+  <nav>
+    <a href="#">Букеты</a>
+    <a href="#">Розы</a>
+    <a href="#">Композиции</a>
+    <a href="#">Свадьба</a>
+    <a href="#">Доставка</a>
+  </nav>
+  <div class="header-actions">
+    <a href="tel:+74951234567" class="btn-header">+7 495 123-45-67</a>
+    <div class="cart-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <div class="cart-badge">3</div>
+    </div>
+  </div>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">Доставка по Москве</div>
+    <h1 class="hero-title">
+      Цветы,<br>
+      <em>созданные</em><br>
+      <span class="line2">для важных</span><br>
+      <span class="line2">моментов</span>
+    </h1>
+    <p class="hero-desc">
+      Свежие букеты от лучших флористов. Бесплатная доставка за 3 часа
+      по всей Москве. Каждый букет — это история.
+    </p>
+    <div class="hero-ctas">
+      <a href="#products" class="btn-primary">Выбрать букет</a>
+      <a href="#categories" class="btn-ghost">Смотреть каталог</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">12K+</span>
+        <span class="stat-label">Довольных клиентов</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3ч</span>
+        <span class="stat-label">Время доставки</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">500+</span>
+        <span class="stat-label">Видов букетов</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-bouquet">
+      <div class="bouquet-wrap">
+        <div class="product-img-css"></div>
+      </div>
+      <div class="flower-card">
+        <div class="flower-card-label">Хит сезона</div>
+        <div class="flower-card-val">Пионы Лале</div>
+        <div class="flower-card-sub">25 бутонов · от 4 900 ₽</div>
+      </div>
+      <div class="delivery-badge">
+        <div class="d-num">3ч</div>
+        <div class="d-label">Доставка</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── DELIVERY STRIP ─── -->
+<div class="delivery-strip">
+  <div class="marquee-track">
+    <span class="marquee-item">Бесплатная доставка от 3 000 ₽ <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Свежие цветы каждый день <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Доставка за 3 часа <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Работаем 24/7 <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Гарантия свежести 7 дней <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Оплата картой и наличными <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Бесплатная доставка от 3 000 ₽ <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Свежие цветы каждый день <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Доставка за 3 часа <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Работаем 24/7 <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Гарантия свежести 7 дней <span class="marquee-sep"></span></span>
+    <span class="marquee-item">Оплата картой и наличными <span class="marquee-sep"></span></span>
+  </div>
+</div>
+
+<!-- ─── CATEGORIES ─── -->
+<section class="categories" id="categories">
+  <div class="section-header">
+    <div class="section-tag">Коллекции</div>
+    <h2 class="section-title">Выберите<br><em>свой цветок</em></h2>
+  </div>
+  <div class="cats-grid">
+    <a href="#" class="cat-card cat-roses">
+      <div class="cat-img"></div>
+      <div class="cat-overlay">
+        <div class="cat-name">Розы</div>
+        <div class="cat-count">148 вариантов</div>
+      </div>
+    </a>
+    <a href="#" class="cat-card cat-peonies">
+      <div class="cat-img"></div>
+      <div class="cat-overlay">
+        <div class="cat-name">Пионы</div>
+        <div class="cat-count">64 варианта</div>
+      </div>
+    </a>
+    <a href="#" class="cat-card cat-tulips">
+      <div class="cat-img"></div>
+      <div class="cat-overlay">
+        <div class="cat-name">Тюльпаны</div>
+        <div class="cat-count">92 варианта</div>
+      </div>
+    </a>
+    <a href="#" class="cat-card cat-mixed">
+      <div class="cat-img"></div>
+      <div class="cat-overlay">
+        <div class="cat-name">Сборные букеты</div>
+        <div class="cat-count">210 вариантов</div>
+      </div>
+    </a>
+    <a href="#" class="cat-card cat-plants">
+      <div class="cat-img"></div>
+      <div class="cat-overlay">
+        <div class="cat-name">Комнатные растения</div>
+        <div class="cat-count">55 вариантов</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ─── PRODUCTS ─── -->
+<section class="products" id="products">
+  <div class="products-header">
+    <div>
+      <div class="section-tag">Популярное</div>
+      <h2 class="section-title">Хиты<br><em>продаж</em></h2>
+    </div>
+    <div class="products-filters">
+      <button class="filter-btn active">Все</button>
+      <button class="filter-btn">Розы</button>
+      <button class="filter-btn">Пионы</button>
+      <button class="filter-btn">Сборные</button>
+      <button class="filter-btn">До 5 000 ₽</button>
+    </div>
+  </div>
+  <div class="products-grid">
+    <a href="product.html" class="product-card p1">
+      <div class="product-thumb">
+        <div class="product-thumb-img"></div>
+        <div class="product-badge badge-hit">Хит</div>
+        <div class="product-wish">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Алые мечты</div>
+        <div class="product-comp">51 красная роза · лента · открытка</div>
+        <div class="product-footer">
+          <div>
+            <span class="product-price">7 900 ₽</span>
+          </div>
+          <button class="btn-add" onclick="event.preventDefault()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </a>
+
+    <a href="product.html" class="product-card p2">
+      <div class="product-thumb">
+        <div class="product-thumb-img"></div>
+        <div class="product-badge badge-new">Новинка</div>
+        <div class="product-wish">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Розовый туман</div>
+        <div class="product-comp">25 пионов · эвкалипт · упаковка</div>
+        <div class="product-footer">
+          <div>
+            <span class="product-price">5 200 ₽</span>
+          </div>
+          <button class="btn-add" onclick="event.preventDefault()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </a>
+
+    <a href="product.html" class="product-card p3">
+      <div class="product-thumb">
+        <div class="product-thumb-img"></div>
+        <div class="product-badge badge-sale">−20%</div>
+        <div class="product-wish">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Золотое утро</div>
+        <div class="product-comp">35 тюльпанов · мимоза · зелень</div>
+        <div class="product-footer">
+          <div>
+            <span class="product-price">3 200 ₽</span>
+            <span class="product-price-old">4 000 ₽</span>
+          </div>
+          <button class="btn-add" onclick="event.preventDefault()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </a>
+
+    <a href="product.html" class="product-card p4">
+      <div class="product-thumb">
+        <div class="product-thumb-img"></div>
+        <div class="product-wish">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+      </div>
+      <div class="product-info">
+        <div class="product-name">Лесная сказка</div>
+        <div class="product-comp">Пионы, хризантемы, суккуленты</div>
+        <div class="product-footer">
+          <div>
+            <span class="product-price">6 800 ₽</span>
+          </div>
+          <button class="btn-add" onclick="event.preventDefault()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ─── ADVANTAGES ─── -->
+<section class="advantages">
+  <div class="section-header" style="text-align:center; max-width:600px; margin: 0 auto 60px;">
+    <div class="section-tag" style="justify-content:center;">Почему мы</div>
+    <h2 class="section-title">Ботаника — <em>это качество</em><br>в каждой детали</h2>
+  </div>
+  <div class="adv-grid">
+    <div class="adv-item">
+      <div class="adv-icon">🌿</div>
+      <div class="adv-title">Свежесть гарантирована</div>
+      <div class="adv-desc">Цветы поступают напрямую с ферм Эквадора, Нидерландов и Кении. Срок стойкости — от 7 до 14 дней.</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-icon">⚡</div>
+      <div class="adv-title">Доставка за 3 часа</div>
+      <div class="adv-desc">Работаем по всей Москве и ближнему Подмосковью. Срочная доставка за 1–2 часа в пределах МКАД.</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-icon">✦</div>
+      <div class="adv-title">Авторские букеты</div>
+      <div class="adv-desc">Каждый букет собирают флористы с опытом от 5 лет. Индивидуальный заказ — в день обращения.</div>
+    </div>
+    <div class="adv-item">
+      <div class="adv-icon">🔒</div>
+      <div class="adv-title">Анонимная доставка</div>
+      <div class="adv-desc">Без чеков и упоминания цены. Бесплатная открытка с вашим текстом. Получатель не узнает стоимость.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PROMO BANNER ─── -->
+<div class="promo-banner">
+  <div class="promo-inner">
+    <div class="promo-text">
+      <div class="promo-tag">Специальное предложение</div>
+      <h3 class="promo-title">Подписка на<br><em>еженедельные</em><br>букеты</h3>
+      <p class="promo-desc">Свежие цветы каждую неделю по фиксированной цене. Выберите состав, день доставки и наслаждайтесь. Отмените в любой момент.</p>
+    </div>
+    <div class="promo-cta">
+      <div class="promo-price-label">от</div>
+      <div class="promo-price-big">1490</div>
+      <div class="promo-price-unit">рублей в неделю</div>
+      <a href="#" class="btn-primary">Оформить подписку</a>
+    </div>
+  </div>
+</div>
+
+<!-- ─── REVIEWS ─── -->
+<section class="reviews">
+  <div class="section-header">
+    <div class="section-tag">Отзывы</div>
+    <h2 class="section-title">Нам доверяют<br><em>12 000</em> клиентов</h2>
+  </div>
+  <div class="reviews-grid">
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">«Заказывал для супруги на годовщину — букет пришёл точно в срок, невероятно красивый. Она была в восторге. Буду заказывать снова!»</p>
+      <div class="review-author">
+        <div class="review-avatar"><div class="review-avatar-inner"></div></div>
+        <div>
+          <div class="review-name">Алексей М.</div>
+          <div class="review-date">14 марта 2025</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">«Удивили ценой и качеством. Пионы простояли две недели! Курьер был вежлив, доставил в назначенное время. Рекомендую!»</p>
+      <div class="review-author">
+        <div class="review-avatar"><div class="review-avatar-inner"></div></div>
+        <div>
+          <div class="review-name">Мария К.</div>
+          <div class="review-date">2 февраля 2025</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <div class="review-stars">★★★★★</div>
+      <p class="review-text">«Срочный заказ в 23:00 — доставили к 2 часам ночи. Это спасло ситуацию. Упаковка идеальная, цветы свежайшие. Спасибо огромное!»</p>
+      <div class="review-author">
+        <div class="review-avatar"><div class="review-avatar-inner"></div></div>
+        <div>
+          <div class="review-name">Дмитрий В.</div>
+          <div class="review-date">28 января 2025</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GALLERY ─── -->
+<div class="gallery">
+  <div class="gallery-header">
+    <div>
+      <div class="section-tag">Вдохновение</div>
+      <h2 class="section-title" style="font-size: clamp(28px, 3vw, 44px);">Наши работы</h2>
+    </div>
+    <a href="#" style="font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); text-decoration:none;">
+      Смотреть все →
+    </a>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item g1"><div class="gallery-img"></div></div>
+    <div class="gallery-item g2"><div class="gallery-img"></div></div>
+    <div class="gallery-item g3"><div class="gallery-img"></div></div>
+    <div class="gallery-item g4"><div class="gallery-img"></div></div>
+    <div class="gallery-item g5"><div class="gallery-img"></div></div>
+  </div>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">БОТАНИКА</div>
+      <p class="footer-tagline">Доставка свежих цветов и авторских букетов по Москве с 2018 года. Работаем круглосуточно.</p>
+      <div class="footer-social">
+        <a href="#" class="social-link">VK</a>
+        <a href="#" class="social-link">TG</a>
+        <a href="#" class="social-link">WA</a>
+        <a href="#" class="social-link">IG</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Каталог</div>
+      <ul class="footer-links">
+        <li><a href="#">Розы</a></li>
+        <li><a href="#">Пионы</a></li>
+        <li><a href="#">Тюльпаны</a></li>
+        <li><a href="#">Сборные букеты</a></li>
+        <li><a href="#">Свадебные</a></li>
+        <li><a href="#">Корпоративные</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Компания</div>
+      <ul class="footer-links">
+        <li><a href="#">О нас</a></li>
+        <li><a href="#">Доставка и оплата</a></li>
+        <li><a href="#">Гарантии</a></li>
+        <li><a href="#">Отзывы</a></li>
+        <li><a href="#">Блог</a></li>
+        <li><a href="#">Контакты</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Контакты</div>
+      <div class="footer-phone">+7 495 123-45-67</div>
+      <div class="footer-phone-label" style="margin-bottom: 20px;">Работаем 24/7</div>
+      <div class="footer-phone" style="font-size: 16px; letter-spacing: 0;">botanika@flowers.ru</div>
+      <div class="footer-phone-label">Ответим за 10 минут</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Ботаника. Все права защищены.</span>
+    <span class="footer-copy">ИНН 7734567890 · Политика конфиденциальности</span>
+  </div>
+</footer>
+
+<script>
+  // Header scroll effect
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // Filter buttons
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
