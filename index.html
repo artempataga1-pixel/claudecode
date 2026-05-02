@@ -70,6 +70,10 @@
     #mob { max-height:0; overflow:hidden; transition:max-height .35s ease,opacity .3s; opacity:0; }
     #mob.open { max-height:400px; opacity:1; }
 
+    /* Scroll offset for fixed header */
+    html { scroll-padding-top: 64px; }
+    @media(min-width:1024px) { html { scroll-padding-top: 72px; } }
+
     /* Ticker */
     @keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
     .tick-track { display:flex; width:max-content; animation:tick 30s linear infinite; }
@@ -848,7 +852,20 @@
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('mob').classList.toggle('open');
   });
-  document.querySelectorAll('.mob-a').forEach(a => a.addEventListener('click', () => document.getElementById('mob').classList.remove('open')));
+  document.querySelectorAll('.mob-a').forEach(a => a.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const mob = document.getElementById('mob');
+      mob.classList.remove('open');
+      setTimeout(() => {
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 350);
+    } else {
+      document.getElementById('mob').classList.remove('open');
+    }
+  }));
 
   // Scroll reveal
   const io = new IntersectionObserver(entries => {
