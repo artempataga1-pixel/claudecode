@@ -861,11 +861,13 @@
       setTimeout(() => {
         const target = document.querySelector(href);
         if (target) {
-          const headerHeight = document.getElementById('hdr').offsetHeight;
-          const top = target.getBoundingClientRect().top + window.scrollY - headerHeight;
-          window.scrollTo({ top, behavior: 'smooth' });
+          const headerHeight = window.innerWidth >= 1024 ? 72 : 64;
+          let elTop = 0;
+          let el = target;
+          while (el) { elTop += el.offsetTop; el = el.offsetParent; }
+          window.scrollTo({ top: elTop - headerHeight, behavior: 'smooth' });
         }
-      }, 350);
+      }, 400);
     } else {
       document.getElementById('mob').classList.remove('open');
     }
