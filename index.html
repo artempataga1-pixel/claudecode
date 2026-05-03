@@ -852,8 +852,34 @@
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('mob').classList.toggle('open');
   });
-  document.querySelectorAll('.mob-a').forEach(a => a.addEventListener('click', function() {
-    document.getElementById('mob').classList.remove('open');
+  document.querySelectorAll('.mob-a').forEach(a => a.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (!href || !href.startsWith('#')) return;
+    e.preventDefault();
+
+    // Мгновенно закрываем меню (без анимации)
+    const mob = document.getElementById('mob');
+    mob.style.transition = 'none';
+    mob.style.maxHeight = '0';
+    mob.style.opacity = '0';
+    mob.classList.remove('open');
+
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    // Скроллим в следующем кадре — после того как меню схлопнулось
+    requestAnimationFrame(() => {
+      // Отключаем smooth-scroll чтобы скролл был мгновенным и точным
+      document.documentElement.style.scrollBehavior = 'auto';
+      window.scrollTo(0, target.offsetTop - 64);
+      // Возвращаем всё обратно
+      requestAnimationFrame(() => {
+        document.documentElement.style.scrollBehavior = '';
+        mob.style.transition = '';
+        mob.style.maxHeight = '';
+        mob.style.opacity = '';
+      });
+    });
   }));
 
   // Scroll reveal
