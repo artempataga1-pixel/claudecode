@@ -860,7 +860,11 @@
       mob.classList.remove('open');
       setTimeout(() => {
         const target = document.querySelector(href);
-        if (target) window.scrollTo(0, target.offsetTop - 64);
+        if (target) {
+          document.documentElement.style.scrollBehavior = 'auto';
+          window.scrollTo(0, target.offsetTop - 64);
+          setTimeout(() => { document.documentElement.style.scrollBehavior = ''; }, 50);
+        }
       }, 420);
     } else {
       document.getElementById('mob').classList.remove('open');
