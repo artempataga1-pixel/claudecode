@@ -73,6 +73,8 @@
     /* Scroll offset for fixed header */
     html { scroll-padding-top: 64px; }
     @media(min-width:1024px) { html { scroll-padding-top: 72px; } }
+    section[id] { scroll-margin-top: 64px; }
+    @media(min-width:1024px) { section[id] { scroll-margin-top: 72px; } }
 
     /* Ticker */
     @keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
@@ -860,13 +862,7 @@
       mob.classList.remove('open');
       setTimeout(() => {
         const target = document.querySelector(href);
-        if (target) {
-          const headerHeight = window.innerWidth >= 1024 ? 72 : 64;
-          let elTop = 0;
-          let el = target;
-          while (el) { elTop += el.offsetTop; el = el.offsetParent; }
-          window.scrollTo({ top: elTop - headerHeight, behavior: 'smooth' });
-        }
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 400);
     } else {
       document.getElementById('mob').classList.remove('open');
