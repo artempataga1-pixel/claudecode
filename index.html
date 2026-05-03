@@ -852,23 +852,8 @@
   document.getElementById('burger').addEventListener('click', () => {
     document.getElementById('mob').classList.toggle('open');
   });
-  document.querySelectorAll('.mob-a').forEach(a => a.addEventListener('click', function(e) {
-    const href = this.getAttribute('href');
-    if (href && href.startsWith('#')) {
-      e.preventDefault();
-      const mob = document.getElementById('mob');
-      mob.classList.remove('open');
-      setTimeout(() => {
-        const target = document.querySelector(href);
-        if (target) {
-          document.documentElement.style.scrollBehavior = 'auto';
-          window.scrollTo(0, target.offsetTop - 64);
-          setTimeout(() => { document.documentElement.style.scrollBehavior = ''; }, 50);
-        }
-      }, 420);
-    } else {
-      document.getElementById('mob').classList.remove('open');
-    }
+  document.querySelectorAll('.mob-a').forEach(a => a.addEventListener('click', function() {
+    document.getElementById('mob').classList.remove('open');
   }));
 
   // Scroll reveal
